@@ -63,14 +63,28 @@ function parseFile(filename, content) {
     return fields;
 }
 
+// Helper to recursively find files
+function findFiles(dir, fileList = []) {
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+        const filePath = path.join(dir, file);
+        if (fs.statSync(filePath).isDirectory()) {
+            findFiles(filePath, fileList);
+        } else {
+            fileList.push(filePath);
+        }
+    });
+    return fileList;
+}
+
 // Collect tiddlers from src
 const tiddlers = {};
 if (fs.existsSync(srcDir)) {
-    fs.readdirSync(srcDir).forEach(file => {
-        const ext = path.extname(file);
+    findFiles(srcDir).forEach(filePath => {
+        const ext = path.extname(filePath);
         if (['.js', '.tid'].includes(ext)) {
-            const content = fs.readFileSync(path.join(srcDir, file), 'utf8');
-            const fields = parseFile(file, content);
+            const content = fs.readFileSync(filePath, 'utf8');
+            const fields = parseFile(filePath, content);
             if (fields.title) {
                 tiddlers[fields.title] = fields;
             }

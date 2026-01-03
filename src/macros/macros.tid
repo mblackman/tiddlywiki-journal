@@ -10,19 +10,19 @@ type: text/vnd.tiddlywiki
 
 \define journal-nav(period, upButton)
 <div class="journal-nav">
-  <$button class="tc-btn-invisible tw-btn" tooltip="Previous $period$">
+  <$button class="tc-btn-invisible journal-btn" tooltip="Previous $period$">
     <$action-navigate $to={{{ [tag[Journal]tag[$period$]sort[title]before<currentTiddler>] }}}/>
     ← Prev
   </$button>
   $upButton$
-  <$button class="tc-btn-invisible tw-btn" tooltip="Next $period$">
+  <$button class="tc-btn-invisible journal-btn" tooltip="Next $period$">
     <$action-navigate $to={{{ [tag[Journal]tag[$period$]sort[title]after<currentTiddler>] }}}/>
     Next →
   </$button>
 </div>
 \end
 
-\define journal-parent-btn(target, label, tags, tooltip, class:"tw-btn")
+\define journal-parent-btn(target, label, tags, tooltip, class:"journal-btn")
 <$button class="tc-btn-invisible $class$" tooltip="$tooltip$">
   <$action-setfield $tiddler="""$target$""" tags="""$tags$""" />
   <$action-navigate $to="""$target$""" />
@@ -33,9 +33,9 @@ type: text/vnd.tiddlywiki
 \define journal-grid(gridClass, filter, name, date)
   <div class="$gridClass$">
     <$list filter="""$filter$""">
-      <$link class="day-card">
-        <span class="day-card-name">$name$</span>
-        <span class="day-card-date">$date$</span>
+      <$link class="journal-day-card">
+        <span class="journal-day-card-name">$name$</span>
+        <span class="journal-day-card-date">$date$</span>
       </$link>
     </$list>
   </div>
@@ -46,17 +46,17 @@ type: text/vnd.tiddlywiki
   tempTiddler={{{ [[$:/temp/journal/quickadd/]addsuffix<currentTiddler>addsuffix[/]addsuffix[$field$]] }}}
   newline={{{ [charcode[10]] }}}
 >
-  <div class="tw-flex-row">
-    <div class="tw-flex-grow">
-      <$keyboard key="enter" class="tw-full-width">
+  <div class="journal-flex-row">
+    <div class="journal-flex-grow">
+      <$keyboard key="enter" class="journal-full-width">
          <$let entry={{{ [<tempTiddler>get[text]] }}}>
            <$action-setfield $field="$field$" $value={{{ [<currentTiddler>get[$field$]!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
            <$action-setfield $tiddler=<<tempTiddler>> text="" />
          </$let>
-         <$edit-text tiddler=<<tempTiddler>> tag="input" class="tw-input" placeholder="$placeholder$" default="" />
+         <$edit-text tiddler=<<tempTiddler>> tag="input" class="journal-input" placeholder="$placeholder$" default="" />
       </$keyboard>
     </div>
-    <$button class="tc-btn-invisible tw-btn tw-btn-primary" tooltip="Add Bullet">
+    <$button class="tc-btn-invisible journal-btn journal-btn-primary" tooltip="Add Bullet">
        Add
        <$let entry={{{ [<tempTiddler>get[text]] }}}>
          <$action-setfield $field="$field$" $value={{{ [<currentTiddler>get[$field$]!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
@@ -69,7 +69,7 @@ type: text/vnd.tiddlywiki
 
 \define media-picker(field, tag, label)
 <div class="journal-media-wrapper">
-  <span class="tw-label">$label$</span>
+  <span class="journal-label">$label$</span>
   
   <!-- List of added items (Chips) -->
   <div style="margin-bottom: 4px;">
@@ -89,23 +89,23 @@ type: text/vnd.tiddlywiki
     tempState={{{ [[$:/temp/journal/picker/]addsuffix<currentTiddler>addsuffix[/]addsuffix[$field$]] }}}
     journalTitle=<<currentTiddler>>
   >
-    <div class="media-picker-input-wrapper">
+    <div class="journal-media-picker-input-wrapper">
       <div style="position:relative;">
-        <$edit-text tiddler=<<tempState>> tag="input" class="tw-input" placeholder="Search $tag$..." default="" />
+        <$edit-text tiddler=<<tempState>> tag="input" class="journal-input" placeholder="Search $tag$..." default="" />
         <$reveal state=<<tempState>> type="nomatch" text="">
-          <$button class="tc-btn-invisible media-picker-clear-btn">
+          <$button class="tc-btn-invisible journal-media-picker-clear-btn">
             <$action-setfield $tiddler=<<tempState>> text="" />✕
           </$button>
         </$reveal>
       </div>
       
       <$reveal state=<<tempState>> type="nomatch" text="" animate="yes">
-        <$button class="media-picker-overlay">
+        <$button class="journal-media-picker-overlay">
           <$action-setfield $tiddler=<<tempState>> text="" />
         </$button>
-        <div class="tc-drop-down media-picker-dropdown">
+        <div class="tc-drop-down journal-media-picker-dropdown">
           <$let query={{{ [<tempState>get[text]] }}}>
-            <$list filter="[tag[$tag$]!is[system]search:title<query>sort[title]limit[15]]" emptyMessage="<div class='tc-dropdown-item disabled-item'>No matches found</div>">
+            <$list filter="[tag[$tag$]!is[system]search:title<query>sort[title]limit[15]]" emptyMessage="<div class='tc-dropdown-item journal-disabled-item'>No matches found</div>">
               <$button class="tc-btn-invisible tc-dropdown-item">
                 <$action-listops $tiddler=<<journalTitle>> $field="$field$" $subfilter={{{ [<currentTiddler>format:titlelist[]] }}} />
                 <$action-setfield $tiddler=<<tempState>> text="" />
@@ -121,7 +121,7 @@ type: text/vnd.tiddlywiki
 \end
 
 \define media-consumption-summary(journalFilter, field:"habit-media")
-<div class="tw-section">
+<div class="journal-section">
   <$list filter="[tag[MediaType]get[media-type]unique[]sort[]]" variable="mediaType">
     <$let 
       mediaItemsFilter="""$journalFilter$ +[get[$field$]enlist-input[]] :filter[media-type<mediaType>] +[unique[]sort[]]"""

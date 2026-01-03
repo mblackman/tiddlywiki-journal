@@ -10,10 +10,10 @@ type: text/vnd.tiddlywiki
 
 <<journal-nav "Monthly" """
   <$let yearTitle={{!!year}}>
-    <div class="weekly-header-container">
+    <div class="journal-header-container">
       <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags="Journal Yearly" tooltip="Open Yearly Review" />
       <<journal-grid
-        gridClass:"monthly-weeks-grid"
+        gridClass:"journal-weeks-grid"
         filter:"[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]"
         name:"Week"
         date:'<$text text={{{ [{!!title}split[W]last[1]] }}}/>'
@@ -24,37 +24,37 @@ type: text/vnd.tiddlywiki
 
 <h3>✨ Monthly Reflection</h3>
 
-<div class="tw-section">
-  <div class="tw-section-tight">
-      <span class="tw-label">🏆 What were major highlights and themes of this month?</span>
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">🏆 What were major highlights and themes of this month?</span>
       <<journal-quick-add highlights-log "Add a highlight or theme...">>
-      <$edit-text field="highlights-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+      <$edit-text field="highlights-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
-<div class="tw-section">
-  <div class="tw-section-tight">
-      <span class="tw-label">📉 What were the biggest challenges I overcame?</span>
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">📉 What were the biggest challenges I overcame?</span>
       <<journal-quick-add challenges-log "Add a challenge...">>
-      <$edit-text field="challenges-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+      <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
-<div class="tw-section">
-  <div class="tw-section-tight">
-      <span class="tw-label">🔑 What were key lessons from this month?</span>
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">🔑 What were key lessons from this month?</span>
       <<journal-quick-add lessons-log "Add an improvement...">>
-      <$edit-text field="lessons-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+      <$edit-text field="lessons-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
 <h3>🚀 Looking Forward to Next Month</h3>
 
-<div class="tw-section">
-  <div class="tw-section-tight">
-      <span class="tw-label">What are my top 3 priorities for next month?</span>
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">What are my top 3 priorities for next month?</span>
       <<journal-quick-add monthly-priorities "Add improvements...">>
-      <$edit-text field="monthly-priorities" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+      <$edit-text field="monthly-priorities" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
@@ -93,7 +93,7 @@ type: text/vnd.tiddlywiki
 <h3>🗓️ Month in Review</h3>
 
 <h4>Weekly Highlights</h4>
-<div class="tw-section">
+<div class="journal-section">
   <$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
     <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] [all[current]has[improvement-highlight]] +[limit[1]]" variable="ignore">
       <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
@@ -123,7 +123,7 @@ type: text/vnd.tiddlywiki
 <h4>Detailed Logs</h4>
 <$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
   <$list filter="[all[current]has[wins-log]] [all[current]has[challenges-log]] [all[current]has[improvements-log]] +[limit[1]]" variable="ignore">
-    <div class="tw-section">
+    <div class="journal-section">
       <h5><$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link></h5>
       
       <$list filter="[all[current]has[wins-log]]">

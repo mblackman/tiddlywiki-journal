@@ -18,7 +18,7 @@ tags: $:/tags/Stylesheet
 }
 
 /* --- Weekly Header Layout --- */
-.weekly-header-container {
+.journal-header-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +28,7 @@ tags: $:/tags/Stylesheet
 }
 
 /* --- Days Grid --- */
-.weekly-days-grid {
+.journal-days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
@@ -36,21 +36,21 @@ tags: $:/tags/Stylesheet
 }
 
 /* --- New Grids for Monthly/Yearly --- */
-.monthly-weeks-grid {
+.journal-weeks-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   width: 100%;
 }
 
-.yearly-months-grid {
+.journal-months-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   width: 100%;
 }
 
-.day-card {
+.journal-day-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,14 +64,14 @@ tags: $:/tags/Stylesheet
   min-height: 50px;
 }
 
-.day-card:hover {
+.journal-day-card:hover {
   border-color: <<colour primary>>;
   background: rgba(255, 255, 255, 0.08);
   transform: translateY(-2px);
   text-decoration: none;
 }
 
-.day-card-name {
+.journal-day-card-name {
   font-size: 0.65em;
   text-transform: uppercase;
   color: <<colour muted-foreground>>;
@@ -79,7 +79,7 @@ tags: $:/tags/Stylesheet
   margin-bottom: 2px;
 }
 
-.day-card-date {
+.journal-day-card-date {
   font-size: 1.2em;
   font-weight: 700;
   color: <<colour foreground>>;
@@ -105,7 +105,7 @@ tags: $:/tags/Stylesheet
   margin-top: 8px;
   margin-bottom: 16px;
 }
-.journal-btn {
+.journal-dashboard-tile {
   background-color: <<colour tiddler-editor-background>>;
   border: 1px solid <<colour tiddler-controls-foreground>>;
   color: <<colour foreground>>;
@@ -122,23 +122,23 @@ tags: $:/tags/Stylesheet
   width: 100%;
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
-.journal-btn:hover {
+.journal-dashboard-tile:hover {
   background-color: <<colour selection-background>>;
   color: <<colour selection-foreground>>;
   border-color: <<colour selection-background>>;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
-.journal-icon { font-size: 1.4em; margin-bottom: 4px; opacity: 0.9; }
+.journal-dashboard-icon { font-size: 1.4em; margin-bottom: 4px; opacity: 0.9; }
 
-.history-section {
+.journal-history-section {
   background-color: <<colour tiddler-editor-background>>;
   border: 1px solid <<colour tiddler-controls-foreground>>;
   border-radius: 8px;
   padding: 12px;
   margin-top: 12px;
 }
-.history-header {
+.journal-history-header {
   font-size: 0.85em;
   text-transform: uppercase;
   color: <<colour muted-foreground>>;
@@ -147,15 +147,15 @@ tags: $:/tags/Stylesheet
   font-weight: bold;
   letter-spacing: 0.5px;
 }
-.date-jumper {
+.journal-date-jumper {
   display: flex;
   gap: 8px;
   margin-bottom: 16px; /* Increased spacing */
 }
 
-.recent-list { display: flex; flex-direction: column; gap: 8px; }
+.journal-recent-list { display: flex; flex-direction: column; gap: 8px; }
 
-.recent-item {
+.journal-recent-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -170,30 +170,30 @@ tags: $:/tags/Stylesheet
   transition: all 0.1s ease;
 }
 
-.recent-item:hover { 
+.journal-recent-item:hover { 
   background-color: <<colour selection-background>>; 
   color: <<colour selection-foreground>>;
   border-color: <<colour selection-background>>;
   text-decoration: none;
 }
 
-.recent-arrow { opacity: 0.3; font-size: 0.8em; }
-.recent-item:hover .recent-arrow { opacity: 1; }
+.journal-recent-arrow { opacity: 0.3; font-size: 0.8em; }
+.journal-recent-item:hover .journal-recent-arrow { opacity: 1; }
 
 /* Mobile Adjustments */
 @media (max-width: 600px) {
-  .weekly-days-grid {
+.journal-days-grid {
      /* Allow wrapping on very small screens if needed, or keep tight */
      gap: 4px;
   }
-  .monthly-weeks-grid, .yearly-months-grid {
+.journal-weeks-grid, .journal-months-grid {
      grid-template-columns: repeat(3, 1fr);
   }
   .journal-nav {
     flex-direction: column;
     gap: 15px;
   }
-  .weekly-header-container {
+.journal-header-container {
     order: -1; /* Puts the grid above prev/next on mobile if preferred, or remove this line */
   }
   .journal-nav > a {
@@ -208,15 +208,15 @@ tags: $:/tags/Stylesheet
 
 @media (max-width: 300px) {
   .journal-dashboard { grid-template-columns: 1fr; }
-  .journal-btn { flex-direction: row; gap: 10px; text-align: left; padding: 10px; }
+.journal-dashboard-tile { flex-direction: row; gap: 10px; text-align: left; padding: 10px; }
 }
 
 /* --- Media Picker Dropdown --- */
-.media-picker-input-wrapper {
+.journal-media-picker-input-wrapper {
   position: relative;
 }
 
-.media-picker-dropdown {
+.journal-media-picker-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
@@ -228,7 +228,7 @@ tags: $:/tags/Stylesheet
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-.media-picker-clear-btn {
+.journal-media-picker-clear-btn {
   position: absolute;
   right: 8px;
   top: 50%;
@@ -238,14 +238,14 @@ tags: $:/tags/Stylesheet
   font-weight: bold;
 }
 
-.media-picker-dropdown .disabled-item {
+.journal-media-picker-dropdown .journal-disabled-item {
   opacity: 0.6;
   cursor: default;
   padding: 6px 14px;
   font-style: italic;
 }
 
-.media-picker-overlay {
+.journal-media-picker-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -258,7 +258,7 @@ tags: $:/tags/Stylesheet
 }
 
 /* --- Global Button Styles --- */
-.tw-btn {
+.journal-btn {
   display: inline-block;
   padding: 8px 16px;
   border: 1px solid <<colour table-border>>;
@@ -273,7 +273,7 @@ tags: $:/tags/Stylesheet
   cursor: pointer;
 }
 
-.tw-btn:hover {
+.journal-btn:hover {
   background: <<colour primary>>;
   color: <<colour background>>;
   border-color: <<colour primary>>;
@@ -281,21 +281,21 @@ tags: $:/tags/Stylesheet
 }
 
 /* Primary Button */
-.tw-btn-primary {
+.journal-btn-primary {
   background-color: <<colour primary>>;
   color: <<colour background>>;
   border-color: <<colour primary>>;
   font-weight: bold;
 }
 
-.tw-btn-primary:hover {
+.journal-btn-primary:hover {
   background-color: <<colour page-background>>;
   color: <<colour primary>>;
 }
 
 
 /* --- Global Input Styles --- */
-.tw-input {
+.journal-input {
   background: transparent;
   color: <<colour foreground>>;
   border: 1px solid <<colour table-border>>;
@@ -305,10 +305,10 @@ tags: $:/tags/Stylesheet
   line-height: 1.4em;
   box-sizing: border-box; 
 }
-.tw-input::placeholder { color: <<colour foreground>>; opacity: 0.5; }
+.journal-input::placeholder { color: <<colour foreground>>; opacity: 0.5; }
 
 /* Select Dropdown Styling */
-select.tw-input {
+select.journal-input {
   appearance: none;
   -webkit-appearance: none;
   background-color: <<colour tiddler-editor-background>>;
@@ -321,28 +321,16 @@ select.tw-input {
 }
 
 /* --- Global Layout & Typography --- */
-.tw-label { display: block; margin-bottom: 4px; font-weight: bold; opacity: 0.9; }
-.tw-sublabel { display: block; font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; font-style: italic; }
-.tw-section { margin-bottom: 25px; }
-.tw-section-tight { margin-bottom: 10px; }
-.tw-flex-row {
+.journal-label { display: block; margin-bottom: 4px; font-weight: bold; opacity: 0.9; }
+.journal-sublabel { display: block; font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; font-style: italic; }
+.journal-section { margin-bottom: 25px; }
+.journal-section-tight { margin-bottom: 10px; }
+.journal-flex-row {
   display: flex;
   gap: 8px;
   margin-bottom: 6px;
   align-items: center;
   width: 100%;
 }
-.tw-flex-grow { flex-grow: 1; }
-.tw-full-width { width: 100%; display: block; }
-.tw-ml-auto { margin-left: auto; }
-.tw-flex-between { justify-content: space-between; }
-
-/* --- Card Styles --- */
-.tw-card {
-  border: 1px solid <<colour table-border>>;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 10px;
-  background: <<colour tiddler-background>>;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
+.journal-flex-grow { flex-grow: 1; }
+.journal-full-width { width: 100%; display: block; }
