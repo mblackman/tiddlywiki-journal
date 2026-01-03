@@ -87,7 +87,7 @@ type: text/vnd.tiddlywiki
         <td style="text-align:center; padding: 6px;">{{!!habit-exercise}}</td>
       </tr>
     </$list>
-    <tr style="font-weight: bold; background: rgba(255,255,255,0.05);">
+    <tr style="font-weight: bold; background-color: <<colour table-header-background>>;">
       <td style="padding: 8px;">TOTALS</td>
       <td style="text-align:center; padding: 8px;">
         <$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get[habit-program]sum[]] }}}/> m
