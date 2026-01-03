@@ -1,0 +1,73 @@
+title: $:/plugins/mblackman/journal/ui/templates/daily-journal
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+\define newline()
+ 
+\end
+
+<$let currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}>
+
+<<journal-nav "Daily" """
+  <$let 
+    weekTitle={{!!week}}
+    monthTag={{!!month}}
+    yearTag={{!!year}}
+    tags={{{ [[Journal]] [[Weekly]] [<monthTag>] [<yearTag>] +[join[ ]] }}}
+  >
+    <div class="weekly-header-container">
+      <$macrocall $name="journal-parent-btn" target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" />
+    </div>
+  </$let>
+""">>
+
+<h3>✅ Habits & Logs</h3>
+<div class="journal-habits-container">
+  <div>
+    <span class="tw-label">💻 Code (mins)</span>
+    <$edit-text field="habit-program" type="number" class="tc-edit-texteditor tw-input" placeholder="0" size="5" />
+  </div>
+  <div>
+    <span class="tw-label">💪 Exercise (mins)</span>
+    <$edit-text field="habit-exercise" type="number" class="tc-edit-texteditor tw-input" placeholder="0" size="5" />
+  </div>
+  <div class="journal-span-2">
+    <<media-picker "habit-media" "MediaType" "🎬 Media Consumption">>
+  </div>
+</div>
+
+<h3>✨ Reflection</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">🏆 Big Win</span>
+      <$edit-text field="highlight" class="tc-edit-texteditor tw-input" placeholder="One sentence summary for roll-ups..." />
+  </div>
+  <div>
+      <span class="tw-sublabel">Detailed Wins (Quick Add or Edit Below)</span>
+      <<journal-quick-add wins-log "Type a win and hit Add...">>
+      <$edit-text field="wins-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <span class="tw-label">🙏 Gratitude List</span>
+  <<journal-quick-add gratitude-log "I am grateful for...">>
+  <$edit-text field="gratitude-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">📉 Main Challenge</span>
+      <$edit-text field="lowlight" class="tc-edit-texteditor tw-input" placeholder="One sentence summary..." />
+  </div>
+  <div>
+      <span class="tw-sublabel">Detailed Challenges (Quick Add or Edit Below)</span>
+      <<journal-quick-add challenges-log "Type a challenge and hit Add...">>
+      <$edit-text field="challenges-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
+  </div>
+</div>
+
+<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+
+</$let>

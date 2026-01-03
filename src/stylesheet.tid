@@ -1,0 +1,348 @@
+title: $:/plugins/mblackman/journal/ui/Stylesheet
+type: text/vnd.tiddlywiki
+tags: $:/tags/Stylesheet
+
+/* --- Journal Navigation Container --- */
+.journal-nav {
+  /* Darker background for the main container to separate it from the page */
+  background-color: rgba(0, 0, 0, 0.2); 
+  border: 1px solid <<colour table-border>>;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* --- Weekly Header Layout --- */
+.weekly-header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex-grow: 1; /* Ensures it takes up center space */
+}
+
+/* --- Days Grid --- */
+.weekly-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* --- New Grids for Monthly/Yearly --- */
+.monthly-weeks-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.yearly-months-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.day-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  padding: 8px 4px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: 50px;
+}
+
+.day-card:hover {
+  border-color: <<colour primary>>;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.day-card-name {
+  font-size: 0.65em;
+  text-transform: uppercase;
+  color: <<colour muted-foreground>>;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.day-card-date {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: <<colour foreground>>;
+  line-height: 1em;
+}
+
+.journal-habits-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 15px;
+  border: 1px solid <<colour table-border>>;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.journal-span-2 { grid-column: span 2; }
+
+/* --- Journal Controls --- */
+.journal-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+.journal-btn {
+  background-color: <<colour tiddler-editor-background>>;
+  border: 1px solid <<colour tiddler-controls-foreground>>;
+  color: <<colour foreground>>;
+  border-radius: 8px;
+  padding: 12px 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.journal-btn:hover {
+  background-color: <<colour selection-background>>;
+  color: <<colour selection-foreground>>;
+  border-color: <<colour selection-background>>;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+.journal-icon { font-size: 1.4em; margin-bottom: 4px; opacity: 0.9; }
+
+.history-section {
+  background-color: <<colour tiddler-editor-background>>;
+  border: 1px solid <<colour tiddler-controls-foreground>>;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+}
+.history-header {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  color: <<colour muted-foreground>>;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.date-jumper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px; /* Increased spacing */
+}
+
+.recent-list { display: flex; flex-direction: column; gap: 8px; }
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 1em; /* Bigger Text */
+  padding: 10px 12px; /* Bigger Touch Target */
+  color: <<colour foreground>>; /* Regular text color */
+  text-decoration: none;
+  background-color: <<colour tiddler-background>>;
+  border: 1px solid <<colour tiddler-controls-foreground>>;
+  border-radius: 6px;
+  transition: all 0.1s ease;
+}
+
+.recent-item:hover { 
+  background-color: <<colour selection-background>>; 
+  color: <<colour selection-foreground>>;
+  border-color: <<colour selection-background>>;
+  text-decoration: none;
+}
+
+.recent-arrow { opacity: 0.3; font-size: 0.8em; }
+.recent-item:hover .recent-arrow { opacity: 1; }
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .weekly-days-grid {
+     /* Allow wrapping on very small screens if needed, or keep tight */
+     gap: 4px;
+  }
+  .monthly-weeks-grid, .yearly-months-grid {
+     grid-template-columns: repeat(3, 1fr);
+  }
+  .journal-nav {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .weekly-header-container {
+    order: -1; /* Puts the grid above prev/next on mobile if preferred, or remove this line */
+  }
+  .journal-nav > a {
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Restored Mobile Styles */
+  .journal-habits-container { grid-template-columns: 1fr; }
+  .journal-span-2 { grid-column: auto; }
+}
+
+@media (max-width: 300px) {
+  .journal-dashboard { grid-template-columns: 1fr; }
+  .journal-btn { flex-direction: row; gap: 10px; text-align: left; padding: 10px; }
+}
+
+/* --- Media Picker Dropdown --- */
+.media-picker-input-wrapper {
+  position: relative;
+}
+
+.media-picker-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  max-height: 250px;
+  overflow-y: auto;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.media-picker-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.media-picker-dropdown .disabled-item {
+  opacity: 0.6;
+  cursor: default;
+  padding: 6px 14px;
+  font-style: italic;
+}
+
+.media-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 799;
+  border: none;
+  padding: 0;
+}
+
+/* --- Global Button Styles --- */
+.tw-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: <<colour muted-foreground>>;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tw-btn:hover {
+  background: <<colour primary>>;
+  color: <<colour background>>;
+  border-color: <<colour primary>>;
+  text-decoration: none;
+}
+
+/* Primary Button */
+.tw-btn-primary {
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  border-color: <<colour primary>>;
+  font-weight: bold;
+}
+
+.tw-btn-primary:hover {
+  background-color: <<colour page-background>>;
+  color: <<colour primary>>;
+}
+
+
+/* --- Global Input Styles --- */
+.tw-input {
+  background: transparent;
+  color: <<colour foreground>>;
+  border: 1px solid <<colour table-border>>;
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 1.4em;
+  box-sizing: border-box; 
+}
+.tw-input::placeholder { color: <<colour foreground>>; opacity: 0.5; }
+
+/* Select Dropdown Styling */
+select.tw-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: <<colour tiddler-editor-background>>;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding: 4px 32px 4px 8px;
+  cursor: pointer;
+}
+
+/* --- Global Layout & Typography --- */
+.tw-label { display: block; margin-bottom: 4px; font-weight: bold; opacity: 0.9; }
+.tw-sublabel { display: block; font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; font-style: italic; }
+.tw-section { margin-bottom: 25px; }
+.tw-section-tight { margin-bottom: 10px; }
+.tw-flex-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: center;
+  width: 100%;
+}
+.tw-flex-grow { flex-grow: 1; }
+.tw-full-width { width: 100%; display: block; }
+.tw-ml-auto { margin-left: auto; }
+.tw-flex-between { justify-content: space-between; }
+
+/* --- Card Styles --- */
+.tw-card {
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+  background: <<colour tiddler-background>>;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}

@@ -1,0 +1,10 @@
+{
+  "name": "tiddlywiki-journal",
+  "version": "0.0.1",
+  "description": "Structure and styles for a TiddlyWiki journal",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "author": "mblackman",
+  "license": "MIT"
+}

@@ -1,0 +1,147 @@
+title: $:/plugins/mblackman/journal/ui/templates/monthly-journal
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+
+<$let 
+  currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+  matchTitle={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+>
+
+<<journal-nav "Monthly" """
+  <$let yearTitle={{!!year}}>
+    <div class="weekly-header-container">
+      <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags="Journal Yearly" tooltip="Open Yearly Review" />
+      <<journal-grid
+        gridClass:"monthly-weeks-grid"
+        filter:"[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]"
+        name:"Week"
+        date:'<$text text={{{ [{!!title}split[W]last[1]] }}}/>'
+      >>
+    </div>
+  </$let>
+""">>
+
+<h3>✨ Monthly Reflection</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">🏆 What were major highlights and themes of this month?</span>
+      <<journal-quick-add highlights-log "Add a highlight or theme...">>
+      <$edit-text field="highlights-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">📉 What were the biggest challenges I overcame?</span>
+      <<journal-quick-add challenges-log "Add a challenge...">>
+      <$edit-text field="challenges-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">🔑 What were key lessons from this month?</span>
+      <<journal-quick-add lessons-log "Add an improvement...">>
+      <$edit-text field="lessons-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<h3>🚀 Looking Forward to Next Month</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">What are my top 3 priorities for next month?</span>
+      <<journal-quick-add monthly-priorities "Add improvements...">>
+      <$edit-text field="monthly-priorities" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+
+<h3>📊 Habits Summary</h3>
+
+<!-- Calendar Grid of Habits -->
+<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 20px;">
+  <$list filter="[tag[Daily]tag[Journal]prefix<matchTitle>sort[title]]">
+    <div style="border: 1px solid <<colour table-border>>; background: <<colour tiddler-editor-background>>; padding: 4px; min-height: 50px; font-size: 0.8em; border-radius: 4px;">
+       <div style="font-weight:bold; margin-bottom: 4px; color: <<colour muted-foreground>>;">
+         <$link><$text text={{{ [{!!title}split[-]last[1]] }}}/></$link>
+       </div>
+       <div style="display: flex; gap: 2px; flex-wrap: wrap;">
+         <$list filter="[{!!habit-program}compare:number:gteq[10]]"><span title={{{ [{!!habit-program}addsuffix[ mins coding]] }}}>💻</span></$list>
+         <$list filter="[{!!habit-exercise}compare:number:gteq[20]]"><span title={{{ [{!!habit-exercise}addsuffix[ mins exercise]] }}}>💪</span></$list>
+       </div>
+    </div>
+  </$list>
+</div>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+
+  <!-- Media Stats -->
+  <div style="flex: 1; min-width: 250px;">
+    <h4>🎬 Media</h4>
+    <p style="font-size: 0.9em; color: <<colour muted-foreground>>;">
+      You consumed<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>get[habit-media]enlist-input[]unique[]]"/></strong><$text text=" "/>unique media over<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>has[habit-media]]"/></strong><$text text=" "/>days.
+    </p>
+    <<media-consumption-summary "[tag[Daily]tag[Journal]prefix<matchTitle>]">>
+  </div>
+
+</div>
+
+<h3>🗓️ Month in Review</h3>
+
+<h4>Weekly Highlights</h4>
+<div class="tw-section">
+  <$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
+    <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] [all[current]has[improvement-highlight]] +[limit[1]]" variable="ignore">
+      <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
+        <div style="font-weight: bold; margin-bottom: 6px;">
+          <$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link>
+        </div>
+        <$list filter="[all[current]has[highlight]]">
+          <div style="margin-bottom: 4px; display: flex; gap: 8px;">
+            <span style="flex-shrink: 0;">🏆</span> <span>{{!!highlight}}</span>
+          </div>
+        </$list>
+        <$list filter="[all[current]has[lowlight]]">
+          <div style="margin-bottom: 4px;display: flex; gap: 8px;">
+            <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
+          </div>
+        </$list>
+        <$list filter="[all[current]has[improvement-highlight]]">
+          <div style="display: flex; gap: 8px;">
+            <span style="flex-shrink: 0;">🚀</span> <span>{{!!improvement-highlight}}</span>
+          </div>
+        </$list>
+      </div>
+    </$list>
+  </$list>
+</div>
+
+<h4>Detailed Logs</h4>
+<$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
+  <$list filter="[all[current]has[wins-log]] [all[current]has[challenges-log]] [all[current]has[improvements-log]] +[limit[1]]" variable="ignore">
+    <div class="tw-section">
+      <h5><$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link></h5>
+      
+      <$list filter="[all[current]has[wins-log]]">
+        <strong>Wins:</strong>
+        <blockquote><$transclude field="wins-log" mode="block"/></blockquote>
+      </$list>
+      
+      <$list filter="[all[current]has[challenges-log]]">
+        <strong>Challenges:</strong>
+        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
+      </$list>
+
+      <$list filter="[all[current]has[improvements-log]]">
+        <strong>Improvements:</strong>
+        <blockquote><$transclude field="improvements-log" mode="block"/></blockquote>
+      </$list>
+    </div>
+  </$list>
+</$list>
+
+</$let>

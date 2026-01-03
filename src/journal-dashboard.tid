@@ -1,0 +1,85 @@
+title: $:/plugins/mblackman/journal/dashboard
+caption: Journal Dashboard
+
+\define dailyTags() Journal Daily $(weekTag)$ $(monthTag)$ $(yearTag)$
+\define weeklyTags() Journal Weekly $(monthTag)$ $(yearTag)$
+\define monthlyTags() Journal Monthly $(yearTag)$
+\define yearlyTags() Journal Yearly
+
+<$wikify name="weekTag" text='<<dayjs "" "GGGG-[W]WW">>' >
+<$let 
+  monthTag=<<now "YYYY-0MM">> yearTag=<<now "YYYY">>
+  titleDay=<<now "YYYY-0MM-0DD">> titleWeek=<<weekTag>> titleMonth=<<now "YYYY-0MM">> titleYear=<<now "YYYY">>
+>
+
+<div class="journal-dashboard">
+  <$button class="journal-btn">
+    <$list filter="[<titleDay>!is[tiddler]]" variable="none"><$action-setfield $tiddler=<<titleDay>> tags=<<dailyTags>> journal-date=<<now "YYYY0MM0DD120000000">> year=<<yearTag>> month=<<monthTag>> week=<<weekTag>>/></$list>
+    <$action-navigate $to=<<titleDay>>/>
+    <span class="journal-icon">📝</span><span>Today</span>
+  </$button>
+
+  <$button class="journal-btn">
+    <$list filter="[<titleWeek>!is[tiddler]]" variable="none"><$action-setfield $tiddler=<<titleWeek>> tags=<<weeklyTags>> journal-date=<<now "YYYY0MM0DD120000000">> year=<<yearTag>> month=<<monthTag>>/></$list>
+    <$action-navigate $to=<<titleWeek>>/>
+    <span class="journal-icon">📅</span><span>Week</span>
+  </$button>
+
+  <$button class="journal-btn">
+    <$list filter="[<titleMonth>!is[tiddler]]" variable="none"><$action-setfield $tiddler=<<titleMonth>> tags=<<monthlyTags>> journal-date=<<now "YYYY0MM01120000000">> year=<<yearTag>>/></$list>
+    <$action-navigate $to=<<titleMonth>>/>
+    <span class="journal-icon">🗓️</span><span>Month</span>
+  </$button>
+
+  <$button class="journal-btn">
+    <$list filter="[<titleYear>!is[tiddler]]" variable="none"><$action-setfield $tiddler=<<titleYear>> tags=<<yearlyTags>> journal-date=<<now "YYYY0MM01120000000">> /></$list>
+    <$action-navigate $to=<<titleYear>>/>
+    <span class="journal-icon">🗂️</span><span>Year</span>
+  </$button>
+</div>
+
+<div class="history-section">
+  
+  <div class="history-header">Jump to Date</div>
+  
+  <div class="date-jumper">
+    <$edit-text tiddler="$:/temp/journal-jump" tag="input" type="date" class="tw-input" default="" />
+    
+    <$button class="tw-btn tw-btn-primary">
+      <$let 
+        targetDate={{$:/temp/journal-jump}}
+        yearTag={{{ [{$:/temp/journal-jump}split[-]nth[1]] }}}
+        monthTag={{{ [{$:/temp/journal-jump}split[-]first[2]join[-]] }}}
+        myTemplate=""
+      >
+        <$let d-start='<<dayjs "' d-end='" "GGGG-[W]WW">>' >
+        <$wikify name="weekTag" text={{{ [<targetDate>addprefix<d-start>addsuffix<d-end>] }}}>
+        <$list filter="[<targetDate>!is[blank]!is[tiddler]]" variable="none">
+          <$action-setfield $tiddler=<<targetDate>> tags="Journal Daily" text=<<myTemplate>> journal-date={{{ [<targetDate>split[-]join[]addsuffix[120000000]] }}} year=<<yearTag>> month=<<monthTag>> week=<<weekTag>> />
+          <$action-listops $tiddler=<<targetDate>> $tags=<<yearTag>> />
+          <$action-listops $tiddler=<<targetDate>> $tags=<<monthTag>> />
+          <$action-listops $tiddler=<<targetDate>> $tags=<<weekTag>> />
+        </$list>
+        <$action-navigate $to=<<targetDate>> />
+        </$wikify>
+        </$let>
+      </$let>
+      GO
+    </$button>
+  </div>
+
+  <div class="history-header">Recent Entries</div>
+  
+  <div class="recent-list">
+    <$list filter="[tag[Journal]tag[Daily]!sort[title]limit[5]]">
+      <$link class="recent-item">
+        <span><$view field="title"/></span>
+        <span class="recent-arrow">❯</span>
+      </$link>
+    </$list>
+  </div>
+
+</div>
+
+</$let>
+</$wikify>

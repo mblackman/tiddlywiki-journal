@@ -1,0 +1,156 @@
+title: $:/plugins/mblackman/journal/ui/templates/yearly-journal
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+\define journal-date-text(format) <$text text={{{ [{!!journal-date}format:date[$format$]] }}}/>
+
+<$let 
+  currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+  matchTitle={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+>
+
+<<journal-nav "Yearly" """
+  <div class="weekly-header-container">
+    <<journal-grid
+      gridClass:"yearly-months-grid"
+      filter:"[tag[Monthly]tag[Journal]year<matchTitle>sort[journal-date]]"
+      name:'<<journal-date-text "0MM">>'
+      date:'<<journal-date-text "MMM">>'
+    >>
+  </div>
+""">>
+
+<h3>🗓️ Annual Review</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">1. What were the major highlights and themes of this year?</span>
+      <$edit-text field="year-highlights" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">2. What were the biggest challenges I overcame this year?</span>
+      <$edit-text field="year-challenges" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">3. How did this year align with my long-term vision and life goals?</span>
+      <$edit-text field="year-vision" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">4. What is one key lesson I learned this year?</span>
+      <$edit-text field="year-lesson" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">5. How have I grown or changed this year?</span>
+      <$edit-text field="year-growth" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<h3>🚀 Looking Forward to Next Year</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">1. What are my top 3 priorities/goals for next year?</span>
+      <$edit-text field="next-year-priorities" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="1. &#10;2. &#10;3. " />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">2. What potential obstacles should I anticipate?</span>
+      <$edit-text field="next-year-obstacles" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">3. What am I most excited to start or continue?</span>
+      <$edit-text field="next-year-excitement" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<h3>🎯 Annual Goals</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">Define 3-5 overarching goals.</span>
+      <$edit-text field="annual-goals" class="tc-edit-texteditor tw-input" tag="textarea" min-height="150px" placeholder="- [ ] Goal 1: ...&#10;    - Progress: " />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">Annual Goal Review</span>
+      <span class="tw-sublabel">Reflect on your progress towards the goals defined above.</span>
+      <$edit-text field="annual-goals-review" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+
+<h3>📊 Habits Summary</h3>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+  <div style="flex: 1; min-width: 200px; border: 1px solid <<colour table-border>>; padding: 10px; border-radius: 4px;">
+    <div style="font-weight: bold; text-align: center; margin-bottom: 5px;">Total Coding</div>
+    <div style="font-size: 1.5em; text-align: center;">
+      <$text text={{{ [tag[Daily]tag[Journal]prefix<matchTitle>get[habit-program]sum[]] }}}/> <span style="font-size: 0.6em;">mins</span>
+    </div>
+  </div>
+  <div style="flex: 1; min-width: 200px; border: 1px solid <<colour table-border>>; padding: 10px; border-radius: 4px;">
+    <div style="font-weight: bold; text-align: center; margin-bottom: 5px;">Total Exercise</div>
+    <div style="font-size: 1.5em; text-align: center;">
+      <$text text={{{ [tag[Daily]tag[Journal]prefix<matchTitle>get[habit-exercise]sum[]] }}}/> <span style="font-size: 0.6em;">mins</span>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <!-- Media Stats -->
+  <div style="flex: 1; min-width: 250px;">
+    <h4>🎬 Media</h4>
+    <p style="font-size: 0.9em; color: <<colour muted-foreground>>;">
+      You consumed<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>get[habit-media]enlist-input[]unique[]]"/></strong><$text text=" "/>unique media over<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>has[habit-media]]"/></strong><$text text=" "/>days.
+    </p>
+    <<media-consumption-summary "[tag[Daily]tag[Journal]prefix<matchTitle>]">>
+  </div>
+</div>
+
+<h3>📝 Monthly Review Roll-up</h3>
+
+<$list filter="[tag[Monthly]tag[Journal]year<matchTitle>sort[journal-date]]">
+  <$list filter="[all[current]has[highlights-log]] [all[current]has[challenges-log]] [all[current]has[lessons-log]] +[limit[1]]" variable="ignore">
+    <div class="tw-section">
+      <h4><$link><<journal-date-text "MMM">></$link></h4>
+      
+      <$list filter="[all[current]has[highlights-log]]">
+        <strong>Highlights:</strong>
+        <blockquote><$transclude field="highlights-log" mode="block"/></blockquote>
+      </$list>
+      
+      <$list filter="[all[current]has[challenges-log]]">
+        <strong>Challenges:</strong>
+        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
+      </$list>
+
+      <$list filter="[all[current]has[lessons-log]]">
+        <strong>Lessons:</strong>
+        <blockquote><$transclude field="lessons-log" mode="block"/></blockquote>
+      </$list>
+    </div>
+    <hr style="border: 0; border-top: 1px dashed <<colour table-border>>;">
+  </$list>
+</$list>
+
+</$let>

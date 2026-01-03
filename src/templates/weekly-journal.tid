@@ -1,0 +1,149 @@
+title: $:/plugins/mblackman/journal/ui/templates/weekly-journal
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+
+<$let 
+  currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+  matchTitle={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+>
+
+<<journal-nav "Weekly" """
+  <$let 
+    monthTitle={{!!month}}
+  >
+  <$list filter="[<monthTitle>!is[blank]]" variable="ignore">
+    <$let yearTag={{!!year}}
+          tags={{{ [[Journal]] [[Monthly]] [<yearTag>] +[join[ ]] }}}>
+      <div class="weekly-header-container">
+        <$macrocall $name="journal-parent-btn" target=<<monthTitle>> label=<<monthTitle>> tags=<<tags>> tooltip="Open Monthly Review" />
+        <<journal-grid
+          gridClass:"weekly-days-grid"
+          filter:"[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]"
+          name:'<$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[ddd]] }}}/>'
+          date:'<$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[0DD]] }}}/>'
+        >>
+      </div>
+    </$let>
+  </$list>
+  </$let>
+""">>
+
+<h3>✨ Weekly Reflection</h3>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">🏆 Big Wins</span>
+      <$edit-text field="highlight" class="tc-edit-texteditor tw-input" placeholder="What were my big wins this week?" />
+  </div>
+  <div>
+      <span class="tw-sublabel">Detailed Wins</span>
+      <<journal-quick-add wins-log "Add a win...">>
+      <$edit-text field="wins-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">📉 Challenges</span>
+      <$edit-text field="lowlight" class="tc-edit-texteditor tw-input" placeholder="What challenges did I face?" />
+  </div>
+  <div>
+      <span class="tw-sublabel">Detailed Challenges</span>
+      <<journal-quick-add challenges-log "Add a challenge...">>
+      <$edit-text field="challenges-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="tw-section">
+  <div class="tw-section-tight">
+      <span class="tw-label">🚀 Improvements</span>
+      <$edit-text field="improvement-highlight" class="tc-edit-texteditor tw-input" placeholder="What could I improve next week?" />
+  </div>
+  <div>
+      <span class="tw-sublabel">Detailed Improvements</span>
+      <<journal-quick-add improvements-log "Add an improvement...">>
+      <$edit-text field="improvements-log" class="tc-edit-texteditor tw-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+
+<h3>📊 Habits Summary</h3>
+
+<table style="width:100%; border-collapse: collapse;">
+  <thead>
+    <tr style="border-bottom: 2px solid <<colour table-border>>;">
+      <th style="text-align:left; padding: 8px;">Day</th>
+      <th style="text-align:center; padding: 8px;">💻 Code</th>
+      <th style="text-align:center; padding: 8px;">💪 Exercise</th>
+    </tr>
+  </thead>
+  <tbody>
+    <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
+      <tr style="border-bottom: 1px solid <<colour table-border>>;">
+        <td style="padding: 6px;"><$link to=<<currentTiddler>>><$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[ddd]] }}}/></$link></td>
+        <td style="text-align:center; padding: 6px;">{{!!habit-program}}</td>
+        <td style="text-align:center; padding: 6px;">{{!!habit-exercise}}</td>
+      </tr>
+    </$list>
+    <tr style="font-weight: bold; background: rgba(255,255,255,0.05);">
+      <td style="padding: 8px;">TOTALS</td>
+      <td style="text-align:center; padding: 8px;">
+        <$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get[habit-program]sum[]] }}}/> m
+      </td>
+      <td style="text-align:center; padding: 8px;">
+        <$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get[habit-exercise]sum[]] }}}/> m
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>🎬 Media Consumption</h3>
+<<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
+
+<h3>🗓️ Week in Review</h3>
+
+<h4>Daily Highlights</h4>
+<div class="tw-section">
+  <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
+    <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] +[limit[1]]" variable="ignore">
+      <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
+        <div style="font-weight: bold; margin-bottom: 6px;">
+          <$link to=<<currentTiddler>>><$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[DDD, 0DD MMM]] }}}/></$link>
+        </div>
+        <$list filter="[all[current]has[highlight]]">
+          <div style="margin-bottom: 4px; display: flex; gap: 8px;">
+            <span style="flex-shrink: 0;">🏆</span> <span>{{!!highlight}}</span>
+          </div>
+        </$list>
+        <$list filter="[all[current]has[lowlight]]">
+          <div style="display: flex; gap: 8px;">
+            <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
+          </div>
+        </$list>
+      </div>
+    </$list>
+  </$list>
+</div>
+
+<h4>Detailed Logs</h4>
+<$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
+  <$list filter="[all[current]has[wins-log]] [all[current]has[challenges-log]] +[limit[1]]" variable="ignore">
+    <div class="tw-section">
+      <h5><$link><$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[DDD, 0DD MMM]] }}}/></$link></h5>
+      
+      <$list filter="[all[current]has[wins-log]]">
+        <strong>Wins:</strong>
+        <blockquote><$transclude field="wins-log" mode="block"/></blockquote>
+      </$list>
+      
+      <$list filter="[all[current]has[challenges-log]]">
+        <strong>Challenges:</strong>
+        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
+      </$list>
+    </div>
+  </$list>
+</$list>
+
+</$let>

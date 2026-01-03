@@ -1,0 +1,145 @@
+title: $:/plugins/mblackman/journal/macros
+tags: $:/tags/Macro
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+
+\define newline()
+ 
+\end
+
+\define journal-nav(period, upButton)
+<div class="journal-nav">
+  <$button class="tc-btn-invisible tw-btn" tooltip="Previous $period$">
+    <$action-navigate $to={{{ [tag[Journal]tag[$period$]sort[title]before<currentTiddler>] }}}/>
+    ← Prev
+  </$button>
+  $upButton$
+  <$button class="tc-btn-invisible tw-btn" tooltip="Next $period$">
+    <$action-navigate $to={{{ [tag[Journal]tag[$period$]sort[title]after<currentTiddler>] }}}/>
+    Next →
+  </$button>
+</div>
+\end
+
+\define journal-parent-btn(target, label, tags, tooltip, class:"tw-btn")
+<$button class="tc-btn-invisible $class$" tooltip="$tooltip$">
+  <$action-setfield $tiddler="""$target$""" tags="""$tags$""" />
+  <$action-navigate $to="""$target$""" />
+  ↑ $label$
+</$button>
+\end
+
+\define journal-grid(gridClass, filter, name, date)
+  <div class="$gridClass$">
+    <$list filter="""$filter$""">
+      <$link class="day-card">
+        <span class="day-card-name">$name$</span>
+        <span class="day-card-date">$date$</span>
+      </$link>
+    </$list>
+  </div>
+\end
+
+\define journal-quick-add(field, placeholder)
+<$let 
+  tempTiddler={{{ [[$:/temp/journal/quickadd/]addsuffix<currentTiddler>addsuffix[/]addsuffix[$field$]] }}}
+  newline={{{ [charcode[10]] }}}
+>
+  <div class="tw-flex-row">
+    <div class="tw-flex-grow">
+      <$keyboard key="enter" class="tw-full-width">
+         <$let entry={{{ [<tempTiddler>get[text]] }}}>
+           <$action-setfield $field="$field$" $value={{{ [<currentTiddler>get[$field$]!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
+           <$action-setfield $tiddler=<<tempTiddler>> text="" />
+         </$let>
+         <$edit-text tiddler=<<tempTiddler>> tag="input" class="tw-input" placeholder="$placeholder$" default="" />
+      </$keyboard>
+    </div>
+    <$button class="tc-btn-invisible tw-btn tw-btn-primary" tooltip="Add Bullet">
+       Add
+       <$let entry={{{ [<tempTiddler>get[text]] }}}>
+         <$action-setfield $field="$field$" $value={{{ [<currentTiddler>get[$field$]!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
+         <$action-setfield $tiddler=<<tempTiddler>> text="" />
+       </$let>
+    </$button>
+  </div>
+</$let>
+\end
+
+\define media-picker(field, tag, label)
+<div class="journal-media-wrapper">
+  <span class="tw-label">$label$</span>
+  
+  <!-- List of added items (Chips) -->
+  <div style="margin-bottom: 4px;">
+    <$list filter="[<currentTiddler>get[$field$]enlist-input[]]" variable="item">
+      <span style="display: inline-block; background: <<colour tiddler-info-background>>; border: 1px solid <<colour tiddler-info-border>>; border-radius: 12px; padding: 2px 10px; margin: 2px 4px 2px 0; font-size: 0.9em;">
+        <$button class="tc-btn-invisible" tooltip="Remove" style="margin-right: 4px; color: <<colour muted-foreground>>;">
+          <$action-listops $field="$field$" $subfilter="-[<item>]"/>
+          ×
+        </$button>
+        <$link to=<<item>> style="text-decoration: none; color: <<colour foreground>>;" />
+      </span>
+    </$list>
+  </div>
+
+  <!-- Search & Select -->
+  <$let 
+    tempState={{{ [[$:/temp/journal/picker/]addsuffix<currentTiddler>addsuffix[/]addsuffix[$field$]] }}}
+    journalTitle=<<currentTiddler>>
+  >
+    <div class="media-picker-input-wrapper">
+      <div style="position:relative;">
+        <$edit-text tiddler=<<tempState>> tag="input" class="tw-input" placeholder="Search $tag$..." default="" />
+        <$reveal state=<<tempState>> type="nomatch" text="">
+          <$button class="tc-btn-invisible media-picker-clear-btn">
+            <$action-setfield $tiddler=<<tempState>> text="" />✕
+          </$button>
+        </$reveal>
+      </div>
+      
+      <$reveal state=<<tempState>> type="nomatch" text="" animate="yes">
+        <$button class="media-picker-overlay">
+          <$action-setfield $tiddler=<<tempState>> text="" />
+        </$button>
+        <div class="tc-drop-down media-picker-dropdown">
+          <$let query={{{ [<tempState>get[text]] }}}>
+            <$list filter="[tag[$tag$]!is[system]search:title<query>sort[title]limit[15]]" emptyMessage="<div class='tc-dropdown-item disabled-item'>No matches found</div>">
+              <$button class="tc-btn-invisible tc-dropdown-item">
+                <$action-listops $tiddler=<<journalTitle>> $field="$field$" $subfilter={{{ [<currentTiddler>format:titlelist[]] }}} />
+                <$action-setfield $tiddler=<<tempState>> text="" />
+                <$view field="title"/> <$list filter="[all[current]has[media-type]]"><span style="opacity:0.6; font-size:0.8em;">({{!!media-type}})</span></$list>
+              </$button>
+            </$list>
+          </$let>
+        </div>
+      </$reveal>
+    </div>
+  </$let>
+</div>
+\end
+
+\define media-consumption-summary(journalFilter, field:"habit-media")
+<div class="tw-section">
+  <$list filter="[tag[MediaType]get[media-type]unique[]sort[]]" variable="mediaType">
+    <$let 
+      mediaItemsFilter="""$journalFilter$ +[get[$field$]enlist-input[]] :filter[media-type<mediaType>] +[unique[]sort[]]"""
+    >
+      <$list filter="[subfilter<mediaItemsFilter>count[]!match[0]]" variable="ignore">
+        <h5 style="margin-bottom: 5px; margin-top: 15px;"><<mediaType>></h5>
+        <div style="font-size: 0.9em;">
+          <$list filter="[subfilter<mediaItemsFilter>]" variable="item">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 4px; border-bottom: 1px solid <<colour table-border>>;">
+              <$link to=<<item>>/>
+              <span style="background: <<colour tiddler-editor-background>>; color: <<colour foreground>>; border-radius: 6px; padding: 3px 8px; font-size: 0.8em; font-weight: bold; opacity: 0.8;">
+                <$count filter="""$journalFilter$ contains:$field$<item>"""/>d
+              </span>
+            </div>
+          </$list>
+        </div>
+      </$list>
+    </$let>
+  </$list>
+</div>
+\end

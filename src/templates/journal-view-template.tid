@@ -1,0 +1,21 @@
+title: $:/plugins/mblackman/journal/config/view-template
+type: text/vnd.tiddlywiki
+tags: $:/tags/ViewTemplate
+
+<% if [all[current]tag[Journal]] %>
+  <% if [all[current]tag[Daily]] %>
+    {{$:/plugins/mblackman/journal/ui/templates/daily-journal}}
+  <% endif %>
+
+  <% if [all[current]tag[Weekly]] %>
+    {{$:/plugins/mblackman/journal/ui/templates/weekly-journal}}
+  <% endif %>
+
+  <% if [all[current]tag[Monthly]] %>
+    {{$:/plugins/mblackman/journal/ui/templates/monthly-journal}}
+  <% endif %>
+
+  <% if [all[current]tag[Yearly]] %>
+    {{$:/plugins/mblackman/journal/ui/templates/yearly-journal}}
+  <% endif %>
+<% endif %>
