@@ -16,7 +16,7 @@ type: text/vnd.tiddlywiki
     tags={{{ [[Journal]] [[Weekly]] [<monthTag>] [<yearTag>] +[join[ ]] }}}
   >
     <div class="journal-header-container">
-      <$macrocall $name="journal-parent-btn" target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" />
+      <$macrocall $name="journal-parent-btn" target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" year=<<yearTag>> month=<<monthTag>> journalDate=<<now "YYYY0MM0DD120000000">> />
     </div>
   </$let>
 """>>

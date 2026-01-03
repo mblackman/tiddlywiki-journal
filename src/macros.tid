@@ -22,9 +22,13 @@ type: text/vnd.tiddlywiki
 </div>
 \end
 
-\define journal-parent-btn(target, label, tags, tooltip, class:"journal-btn")
+\define journal-parent-btn(target, label, tags, tooltip, year, month, week, journalDate, class:"journal-btn")
 <$button class="tc-btn-invisible $class$" tooltip="$tooltip$">
   <$action-setfield $tiddler="""$target$""" tags="""$tags$""" />
+  <$list filter="[<__year__>!is[blank]]" variable="ignore"><$action-setfield $tiddler="""$target$""" year=<<__year__>> /></$list>
+  <$list filter="[<__month__>!is[blank]]" variable="ignore"><$action-setfield $tiddler="""$target$""" month=<<__month__>> /></$list>
+  <$list filter="[<__week__>!is[blank]]" variable="ignore"><$action-setfield $tiddler="""$target$""" week=<<__week__>> /></$list>
+  <$list filter="[<__journalDate__>!is[blank]]" variable="ignore"><$action-setfield $tiddler="""$target$""" journal-date=<<__journalDate__>> /></$list>
   <$action-navigate $to="""$target$""" />
   ↑ $label$
 </$button>

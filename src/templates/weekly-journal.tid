@@ -16,7 +16,7 @@ type: text/vnd.tiddlywiki
     <$let yearTag={{!!year}}
           tags={{{ [[Journal]] [[Monthly]] [<yearTag>] +[join[ ]] }}}>
       <div class="journal-header-container">
-        <$macrocall $name="journal-parent-btn" target=<<monthTitle>> label=<<monthTitle>> tags=<<tags>> tooltip="Open Monthly Review" />
+        <$macrocall $name="journal-parent-btn" target=<<monthTitle>> label=<<monthTitle>> tags=<<tags>> tooltip="Open Monthly Review" year=<<yearTag>> journalDate=<<now "YYYY0MM01120000000">> />
         <<journal-grid
           gridClass:"journal-days-grid"
           filter:"[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]"
