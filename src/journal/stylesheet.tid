@@ -257,6 +257,37 @@ tags: $:/tags/Stylesheet
   padding: 0;
 }
 
+/* --- Summary List Group --- */
+.journal-summary-group {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 4px;
+  background-color: <<colour tiddler-background>>;
+}
+
+.journal-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid <<colour table-border>>;
+  font-size: 0.9em;
+}
+
+.journal-summary-item:last-child { border-bottom: none; }
+.journal-summary-item:hover { background-color: <<colour table-header-background>>; }
+
+.journal-summary-link { flex-grow: 1; overflow-wrap: break-word; margin-right: 12px; line-height: 1.3; }
+
+.journal-summary-badge {
+  background-color: <<colour tiddler-editor-background>>; color: <<colour foreground>>;
+  border: 1px solid <<colour table-border>>; border-radius: 12px; padding: 2px 8px;
+  font-size: 0.85em; font-weight: 600; white-space: nowrap; flex-shrink: 0; opacity: 0.9;
+}
+
 /* --- Global Button Styles --- */
 .journal-btn {
   display: inline-block;

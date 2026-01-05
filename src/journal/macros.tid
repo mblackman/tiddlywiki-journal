@@ -132,18 +132,14 @@ type: text/vnd.tiddlywiki
     >
       <$list filter="[subfilter<mediaItemsFilter>count[]!match[0]]" variable="ignore">
         <h5 style="margin-bottom: 5px; margin-top: 15px;"><<mediaType>></h5>
-        <table style="width: auto; max-width: 100%; border-collapse: collapse; font-size: 0.9em;">
+        <div class="journal-summary-group">
           <$list filter="[subfilter<mediaItemsFilter>]" variable="item">
-            <tr style="border-bottom: 1px solid <<colour table-border>>;">
-              <td style="padding: 6px 4px; overflow-wrap: break-word;"><$link to=<<item>>/></td>
-              <td style="text-align: right; padding: 6px 4px; width: 60px;">
-                <span style="background: <<colour tiddler-editor-background>>; color: <<colour foreground>>; border-radius: 6px; padding: 3px 8px; font-size: 0.8em; font-weight: bold; opacity: 0.8;">
-                  <$count filter="""$journalFilter$ +[contains:$field$<item>]"""/>d
-                </span>
-              </td>
-            </tr>
+            <div class="journal-summary-item">
+              <div class="journal-summary-link"><$link to=<<item>>/></div>
+              <span class="journal-summary-badge"><$count filter="""$journalFilter$ +[contains:$field$<item>]"""/>d</span>
+            </div>
           </$list>
-        </table>
+        </div>
       </$list>
     </$let>
   </$list>
