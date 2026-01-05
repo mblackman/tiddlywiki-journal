@@ -143,3 +143,6 @@ wiki/**/$__temp_*
 wiki/**/$__view.tid
 wiki/**/$__config_Navigation_openLinkFromInsideRiver.tid
 wiki/**/$__config_Navigation_openLinkFromOutsideRiver.tid
+
+# Folder used for user data
+wiki/tiddlers/system/data/
