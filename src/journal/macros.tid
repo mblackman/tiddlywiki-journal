@@ -132,16 +132,18 @@ type: text/vnd.tiddlywiki
     >
       <$list filter="[subfilter<mediaItemsFilter>count[]!match[0]]" variable="ignore">
         <h5 style="margin-bottom: 5px; margin-top: 15px;"><<mediaType>></h5>
-        <div style="font-size: 0.9em;">
+        <table style="width: auto; max-width: 100%; border-collapse: collapse; font-size: 0.9em;">
           <$list filter="[subfilter<mediaItemsFilter>]" variable="item">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 4px; border-bottom: 1px solid <<colour table-border>>;">
-              <$link to=<<item>>/>
-              <span style="background: <<colour tiddler-editor-background>>; color: <<colour foreground>>; border-radius: 6px; padding: 3px 8px; font-size: 0.8em; font-weight: bold; opacity: 0.8;">
-                <$count filter="""$journalFilter$ contains:$field$<item>"""/>d
-              </span>
-            </div>
+            <tr style="border-bottom: 1px solid <<colour table-border>>;">
+              <td style="padding: 6px 4px; overflow-wrap: break-word;"><$link to=<<item>>/></td>
+              <td style="text-align: right; padding: 6px 4px; width: 60px;">
+                <span style="background: <<colour tiddler-editor-background>>; color: <<colour foreground>>; border-radius: 6px; padding: 3px 8px; font-size: 0.8em; font-weight: bold; opacity: 0.8;">
+                  <$count filter="""$journalFilter$ contains:$field$<item>"""/>d
+                </span>
+              </td>
+            </tr>
           </$list>
-        </div>
+        </table>
       </$list>
     </$let>
   </$list>
