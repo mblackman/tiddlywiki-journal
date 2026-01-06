@@ -17,9 +17,44 @@ Manage the habits you want to track.
     <th>Label</th>
     <th>Shorthand</th>
     <th>Field Name</th>
-    <th>Type</th>
+<th>Type</th>
     <th></th>
   </tr>
+  <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]">
+    <tr>
+      <td><$edit-text field="caption" class="tc-edit-texteditor" /></td>
+      <td><$edit-text field="habit-shorthand" class="tc-edit-texteditor" size="3" /></td>
+      <td>
+        <$edit-text field="journal-field" class="tc-edit-texteditor" />
+        <$let currentField={{!!journal-field}} titleField={{{ [<currentTiddler>removeprefix[$:/config/Journal/Habit/]] }}} configTiddler=<<currentTiddler>>>
+          <$list filter="[<currentField>!match<titleField>!is[blank]]">
+            <$button class="tc-btn-mini" tooltip="Rename field in all journals and update config title">
+              Update
+              <$list filter="[tag[Daily]tag[Journal]has<titleField>]" variable="journalTiddler">
+                 <$action-setfield $tiddler=<<journalTiddler>> $field=<<currentField>> $value={{{ [<journalTiddler>get<titleField>] }}} />
+                 <$action-deletefield $tiddler=<<journalTiddler>> $field=<<titleField>> />
+              </$list>
+              <$action-createtiddler $basetitle={{{ [<currentField>addprefix[$:/config/Journal/Habit/]] }}} $template=<<configTiddler>> />
+              <$action-deletetiddler $tiddler=<<configTiddler>> />
+            </$button>
+          </$list>
+        </$let>
+      </td>
+      <td>
+        <$select field="habit-type" class="tc-edit-texteditor">
+          <option value="number">Number</option>
+          <option value="checkbox">Checkbox</option>
+          <option value="text">Text</option>
+        </$select>
+      </td>
+      <td>
+        <$button class="tc-btn-invisible tc-btn-icon" tooltip="Delete Habit">
+          <$action-deletetiddler $tiddler=<<currentTiddler>> />
+          {{$:/core/images/delete-button}}
+        </$button>
+      </td>
+    </tr>
+  </$list>
   <tr>
     <td><$edit-text tiddler="$:/temp/journal/new-habit" field="caption" placeholder="e.g. Exercise" class="tc-edit-texteditor" /></td>
     <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-shorthand" placeholder="Ex" class="tc-edit-texteditor" size="3" /></td>
@@ -40,5 +75,3 @@ Manage the habits you want to track.
     </td>
   </tr>
 </table>
-
-<<list-tagged-draggable tag:"$:/tags/Journal/Habit" subFilter:"!has[draft.of]" itemTemplate:"$:/plugins/mblackman/journal/ui/templates/habit-config-item" emptyMessage:"No habits configured.">>
