@@ -9,16 +9,16 @@ type: text/vnd.tiddlywiki
 >
 
 <<journal-nav "Monthly" """
-  <$let yearTitle={{!!year}}>
-    <div class="journal-header-container">
-      <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags="Journal Yearly" tooltip="Open Yearly Review" journalDate=<<now "YYYY0MM01120000000">> />
-      <<journal-grid
-        gridClass:"journal-weeks-grid"
-        filter:"[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]"
-        name:"Week"
-        date:'<$text text={{{ [{!!title}split[W]last[1]] }}}/>'
-      >>
-    </div>
+  <$let 
+    yearTitle={{!!year}}
+  >
+  <$list filter="[<yearTitle>!is[blank]]" variable="ignore">
+    <$let tags={{{ [[Journal]] [[Yearly]] +[join[ ]] }}}>
+      <div class="journal-header-container">
+        <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags=<<tags>> tooltip="Open Yearly Review" journalDate=<<now "YYYY0101120000000">> />
+      </div>
+    </$let>
+  </$list>
   </$let>
 """>>
 
@@ -26,15 +26,23 @@ type: text/vnd.tiddlywiki
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">🏆 What were major highlights and themes of this month?</span>
-      <<journal-quick-add highlights-log "Add a highlight or theme...">>
-      <$edit-text field="highlights-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+      <span class="journal-label">🏆 Big Wins</span>
+      <$edit-text field="highlight" class="tc-edit-texteditor journal-input" placeholder="What were my big wins this month?" />
+  </div>
+  <div>
+      <span class="journal-sublabel">Detailed Wins</span>
+      <<journal-quick-add wins-log "Add a win...">>
+      <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">📉 What were the biggest challenges I overcame?</span>
+      <span class="journal-label">📉 Challenges</span>
+      <$edit-text field="lowlight" class="tc-edit-texteditor journal-input" placeholder="What challenges did I face?" />
+  </div>
+  <div>
+      <span class="journal-sublabel">Detailed Challenges</span>
       <<journal-quick-add challenges-log "Add a challenge...">>
       <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
@@ -42,19 +50,13 @@ type: text/vnd.tiddlywiki
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">🔑 What were key lessons from this month?</span>
-      <<journal-quick-add lessons-log "Add an improvement...">>
-      <$edit-text field="lessons-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+      <span class="journal-label">🚀 Improvements</span>
+      <$edit-text field="improvement-highlight" class="tc-edit-texteditor journal-input" placeholder="What could I improve next month?" />
   </div>
-</div>
-
-<h3>🚀 Looking Forward to Next Month</h3>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">What are my top 3 priorities for next month?</span>
-      <<journal-quick-add monthly-priorities "Add improvements...">>
-      <$edit-text field="monthly-priorities" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  <div>
+      <span class="journal-sublabel">Detailed Improvements</span>
+      <<journal-quick-add improvements-log "Add an improvement...">>
+      <$edit-text field="improvements-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
@@ -62,43 +64,25 @@ type: text/vnd.tiddlywiki
 
 <h3>📊 Habits Summary</h3>
 
-<!-- Calendar Grid of Habits -->
-<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 20px;">
-  <$list filter="[tag[Daily]tag[Journal]prefix<matchTitle>sort[title]]">
-    <div style="border: 1px solid <<colour table-border>>; background: <<colour tiddler-editor-background>>; padding: 4px; min-height: 50px; font-size: 0.8em; border-radius: 4px;">
-       <div style="font-weight:bold; margin-bottom: 4px; color: <<colour muted-foreground>>;">
-         <$link><$text text={{{ [{!!title}split[-]last[1]] }}}/></$link>
-       </div>
-       <div style="display: flex; gap: 2px; flex-wrap: wrap;">
-         <$list filter="[{!!habit-program}compare:number:gteq[10]]"><span title={{{ [{!!habit-program}addsuffix[ mins coding]] }}}>💻</span></$list>
-         <$list filter="[{!!habit-exercise}compare:number:gteq[20]]"><span title={{{ [{!!habit-exercise}addsuffix[ mins exercise]] }}}>💪</span></$list>
-       </div>
-    </div>
-  </$list>
-</div>
+<<journal-grid
+  gridClass:"journal-days-grid"
+  filter:"[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]"
+  name:'<$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[ddd]] }}}/>'
+  date:'<$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[0DD]] }}}/>'
+>>
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap;">
-
-  <!-- Media Stats -->
-  <div style="flex: 1; min-width: 250px;">
-    <h4>🎬 Media</h4>
-    <p style="font-size: 0.9em; color: <<colour muted-foreground>>;">
-      You consumed<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>get[habit-media]enlist-input[]unique[]]"/></strong><$text text=" "/>unique media over<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>has[habit-media]]"/></strong><$text text=" "/>days.
-    </p>
-    <<media-consumption-summary "[tag[Daily]tag[Journal]prefix<matchTitle>]">>
-  </div>
-
-</div>
+<h3>🎬 Media Consumption</h3>
+<<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
 
 <h3>🗓️ Month in Review</h3>
 
-<h4>Weekly Highlights</h4>
+<h4>Daily Highlights</h4>
 <div class="journal-section">
-  <$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
-    <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] [all[current]has[improvement-highlight]] +[limit[1]]" variable="ignore">
+  <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
+    <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] +[limit[1]]" variable="ignore">
       <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
         <div style="font-weight: bold; margin-bottom: 6px;">
-          <$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link>
+          <$link to=<<currentTiddler>>><$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[0DD ddd]] }}}/></$link>
         </div>
         <$list filter="[all[current]has[highlight]]">
           <div style="margin-bottom: 4px; display: flex; gap: 8px;">
@@ -106,42 +90,13 @@ type: text/vnd.tiddlywiki
           </div>
         </$list>
         <$list filter="[all[current]has[lowlight]]">
-          <div style="margin-bottom: 4px;display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
-          </div>
-        </$list>
-        <$list filter="[all[current]has[improvement-highlight]]">
           <div style="display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">🚀</span> <span>{{!!improvement-highlight}}</span>
+            <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
           </div>
         </$list>
       </div>
     </$list>
   </$list>
 </div>
-
-<h4>Detailed Logs</h4>
-<$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
-  <$list filter="[all[current]has[wins-log]] [all[current]has[challenges-log]] [all[current]has[improvements-log]] +[limit[1]]" variable="ignore">
-    <div class="journal-section">
-      <h5><$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link></h5>
-      
-      <$list filter="[all[current]has[wins-log]]">
-        <strong>Wins:</strong>
-        <blockquote><$transclude field="wins-log" mode="block"/></blockquote>
-      </$list>
-      
-      <$list filter="[all[current]has[challenges-log]]">
-        <strong>Challenges:</strong>
-        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
-      </$list>
-
-      <$list filter="[all[current]has[improvements-log]]">
-        <strong>Improvements:</strong>
-        <blockquote><$transclude field="improvements-log" mode="block"/></blockquote>
-      </$list>
-    </div>
-  </$list>
-</$list>
 
 </$let>

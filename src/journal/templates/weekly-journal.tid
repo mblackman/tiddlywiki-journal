@@ -75,26 +75,38 @@ type: text/vnd.tiddlywiki
   <thead>
     <tr style="border-bottom: 2px solid <<colour table-border>>;">
       <th style="text-align:left; padding: 8px;">Day</th>
-      <th style="text-align:center; padding: 8px;">💻 Code</th>
-      <th style="text-align:center; padding: 8px;">💪 Exercise</th>
+      <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
+        <th style="text-align:center; padding: 8px;"><$text text={{{ [<habitConfig>get[caption]] }}}/></th>
+      </$list>
     </tr>
   </thead>
   <tbody>
-    <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
+    <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]" variable="dayTiddler">
       <tr style="border-bottom: 1px solid <<colour table-border>>;">
-        <td style="padding: 6px;"><$link to=<<currentTiddler>>><$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[ddd]] }}}/></$link></td>
-        <td style="text-align:center; padding: 6px;">{{!!habit-program}}</td>
-        <td style="text-align:center; padding: 6px;">{{!!habit-exercise}}</td>
+        <td style="padding: 6px;"><$link to=<<dayTiddler>>><$text text={{{ [<dayTiddler>split[-]join[]addsuffix[120000000]format:date[ddd]] }}}/></$link></td>
+        <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
+          <$let fieldName={{{ [<habitConfig>get[journal-field]] }}} habitType={{{ [<habitConfig>get[habit-type]else[number]] }}} fieldValue={{{ [<dayTiddler>get<fieldName>] }}}>
+            <td style="text-align:center; padding: 6px;">
+              <$list filter="[<habitType>match[checkbox]]" variable="ignore">
+                <$list filter="[<fieldValue>match[yes]]" variable="ignore">✅</$list>
+                <$list filter="[<fieldValue>match[no]]" variable="ignore">❌</$list>
+              </$list>
+              <$list filter="[<habitType>!match[checkbox]]" variable="ignore"><$view tiddler=<<dayTiddler>> field=<<fieldName>>/></$list>
+            </td>
+          </$let>
+        </$list>
       </tr>
     </$list>
     <tr style="font-weight: bold; background-color: <<colour table-header-background>>;">
       <td style="padding: 8px;">TOTALS</td>
-      <td style="text-align:center; padding: 8px;">
-        <$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get[habit-program]sum[]] }}}/> m
-      </td>
-      <td style="text-align:center; padding: 8px;">
-        <$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get[habit-exercise]sum[]] }}}/> m
-      </td>
+      <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
+        <$let fieldName={{{ [<habitConfig>get[journal-field]] }}} habitType={{{ [<habitConfig>get[habit-type]] }}}>
+          <td style="text-align:center; padding: 8px;">
+            <$list filter="[<habitType>match[number]]" variable="ignore"><$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get<fieldName>sum[]] }}}/></$list>
+            <$list filter="[<habitType>match[checkbox]]" variable="ignore"><$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get<fieldName>match[yes]count[]] }}}/></$list>
+          </td>
+        </$let>
+      </$list>
     </tr>
   </tbody>
 </table>

@@ -2,98 +2,37 @@ title: $:/plugins/mblackman/journal/ui/templates/yearly-journal
 type: text/vnd.tiddlywiki
 
 \whitespace trim
-\define journal-date-text(format) <$text text={{{ [{!!journal-date}format:date[$format$]] }}}/>
 
 <$let 
   currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
   matchTitle={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
 >
 
-<<journal-nav "Yearly" """
-  <div class="journal-header-container">
-    <<journal-grid
-      gridClass:"journal-months-grid"
-      filter:"[tag[Monthly]tag[Journal]year<matchTitle>sort[journal-date]]"
-      name:'<<journal-date-text "0MM">>'
-      date:'<<journal-date-text "MMM">>'
-    >>
-  </div>
-""">>
+<<journal-nav "Yearly" "">>
 
-<h3>🗓️ Annual Review</h3>
+<h3>✨ Yearly Reflection</h3>
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">1. What were the major highlights and themes of this year?</span>
-      <$edit-text field="year-highlights" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+      <span class="journal-label">🏆 Big Wins</span>
+      <$edit-text field="highlight" class="tc-edit-texteditor journal-input" placeholder="What were my big wins this year?" />
+  </div>
+  <div>
+      <span class="journal-sublabel">Detailed Wins</span>
+      <<journal-quick-add wins-log "Add a win...">>
+      <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">2. What were the biggest challenges I overcame this year?</span>
-      <$edit-text field="year-challenges" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+      <span class="journal-label">📉 Challenges</span>
+      <$edit-text field="lowlight" class="tc-edit-texteditor journal-input" placeholder="What challenges did I face?" />
   </div>
-</div>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">3. How did this year align with my long-term vision and life goals?</span>
-      <$edit-text field="year-vision" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
-  </div>
-</div>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">4. What is one key lesson I learned this year?</span>
-      <$edit-text field="year-lesson" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
-  </div>
-</div>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">5. How have I grown or changed this year?</span>
-      <$edit-text field="year-growth" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
-  </div>
-</div>
-
-<h3>🚀 Looking Forward to Next Year</h3>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">1. What are my top 3 priorities/goals for next year?</span>
-      <$edit-text field="next-year-priorities" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="1. &#10;2. &#10;3. " />
-  </div>
-</div>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">2. What potential obstacles should I anticipate?</span>
-      <$edit-text field="next-year-obstacles" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
-  </div>
-</div>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">3. What am I most excited to start or continue?</span>
-      <$edit-text field="next-year-excitement" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
-  </div>
-</div>
-
-<h3>🎯 Annual Goals</h3>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">Define 3-5 overarching goals.</span>
-      <$edit-text field="annual-goals" class="tc-edit-texteditor journal-input" tag="textarea" min-height="150px" placeholder="- [ ] Goal 1: ...&#10;    - Progress: " />
-  </div>
-</div>
-
-<div class="journal-section">
-  <div class="journal-section-tight">
-      <span class="journal-label">Annual Goal Review</span>
-      <span class="journal-sublabel">Reflect on your progress towards the goals defined above.</span>
-      <$edit-text field="annual-goals-review" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  <div>
+      <span class="journal-sublabel">Detailed Challenges</span>
+      <<journal-quick-add challenges-log "Add a challenge...">>
+      <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
@@ -101,56 +40,55 @@ type: text/vnd.tiddlywiki
 
 <h3>📊 Habits Summary</h3>
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-  <div style="flex: 1; min-width: 200px; border: 1px solid <<colour table-border>>; padding: 10px; border-radius: 4px;">
-    <div style="font-weight: bold; text-align: center; margin-bottom: 5px;">Total Coding</div>
-    <div style="font-size: 1.5em; text-align: center;">
-      <$text text={{{ [tag[Daily]tag[Journal]prefix<matchTitle>get[habit-program]sum[]] }}}/> <span style="font-size: 0.6em;">mins</span>
-    </div>
-  </div>
-  <div style="flex: 1; min-width: 200px; border: 1px solid <<colour table-border>>; padding: 10px; border-radius: 4px;">
-    <div style="font-weight: bold; text-align: center; margin-bottom: 5px;">Total Exercise</div>
-    <div style="font-size: 1.5em; text-align: center;">
-      <$text text={{{ [tag[Daily]tag[Journal]prefix<matchTitle>get[habit-exercise]sum[]] }}}/> <span style="font-size: 0.6em;">mins</span>
-    </div>
-  </div>
-</div>
-
-<div style="display: flex; gap: 20px; flex-wrap: wrap;">
-  <!-- Media Stats -->
-  <div style="flex: 1; min-width: 250px;">
-    <h4>🎬 Media</h4>
-    <p style="font-size: 0.9em; color: <<colour muted-foreground>>;">
-      You consumed<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>get[habit-media]enlist-input[]unique[]]"/></strong><$text text=" "/>unique media over<$text text=" "/><strong><$count filter="[tag[Daily]tag[Journal]prefix<matchTitle>has[habit-media]]"/></strong><$text text=" "/>days.
-    </p>
-    <<media-consumption-summary "[tag[Daily]tag[Journal]prefix<matchTitle>]">>
-  </div>
-</div>
-
-<h3>📝 Monthly Review Roll-up</h3>
-
-<$list filter="[tag[Monthly]tag[Journal]year<matchTitle>sort[journal-date]]">
-  <$list filter="[all[current]has[highlights-log]] [all[current]has[challenges-log]] [all[current]has[lessons-log]] +[limit[1]]" variable="ignore">
-    <div class="journal-section">
-      <h4><$link><<journal-date-text "MMM">></$link></h4>
-      
-      <$list filter="[all[current]has[highlights-log]]">
-        <strong>Highlights:</strong>
-        <blockquote><$transclude field="highlights-log" mode="block"/></blockquote>
+<table style="width:100%; border-collapse: collapse;">
+  <thead>
+    <tr style="border-bottom: 2px solid <<colour table-border>>;">
+      <th style="text-align:left; padding: 8px;">Month</th>
+      <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
+        <th style="text-align:center; padding: 8px;"><$text text={{{ [<habitConfig>get[caption]] }}}/></th>
       </$list>
-      
-      <$list filter="[all[current]has[challenges-log]]">
-        <strong>Challenges:</strong>
-        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
+    </tr>
+  </thead>
+  <tbody>
+    <$list filter="[tag[Monthly]tag[Journal]tag<matchTitle>sort[journal-date]]" variable="monthTiddler">
+      <tr style="border-bottom: 1px solid <<colour table-border>>;">
+        <td style="padding: 6px;"><$link to=<<monthTiddler>>><$text text={{{ [<monthTiddler>split[-]last[]] }}}/></$link></td>
+        <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
+          <$let fieldName={{{ [<habitConfig>get[journal-field]] }}} habitType={{{ [<habitConfig>get[habit-type]] }}}>
+            <td style="text-align:center; padding: 6px;">
+              <$list filter="[<habitType>match[number]]" variable="ignore"><$text text={{{ [tag[Daily]tag[Journal]tag<monthTiddler>get<fieldName>sum[]] }}}/></$list>
+              <$list filter="[<habitType>match[checkbox]]" variable="ignore"><$text text={{{ [tag[Daily]tag[Journal]tag<monthTiddler>get<fieldName>match[yes]count[]] }}}/></$list>
+            </td>
+          </$let>
+        </$list>
+      </tr>
+    </$list>
+    <tr style="font-weight: bold; background-color: <<colour table-header-background>>;">
+      <td style="padding: 8px;">TOTALS</td>
+      <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
+        <$let fieldName={{{ [<habitConfig>get[journal-field]] }}} habitType={{{ [<habitConfig>get[habit-type]] }}}>
+          <td style="text-align:center; padding: 8px;">
+            <$list filter="[<habitType>match[number]]" variable="ignore"><$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get<fieldName>sum[]] }}}/></$list>
+            <$list filter="[<habitType>match[checkbox]]" variable="ignore"><$text text={{{ [tag[Daily]tag[Journal]tag<matchTitle>get<fieldName>match[yes]count[]] }}}/></$list>
+          </td>
+        </$let>
       </$list>
+    </tr>
+  </tbody>
+</table>
 
-      <$list filter="[all[current]has[lessons-log]]">
-        <strong>Lessons:</strong>
-        <blockquote><$transclude field="lessons-log" mode="block"/></blockquote>
-      </$list>
-    </div>
-    <hr style="border: 0; border-top: 1px dashed <<colour table-border>>;">
+<h3>🎬 Media Consumption</h3>
+<<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
+
+<h3>️ Year in Review</h3>
+
+<div class="journal-months-grid">
+  <$list filter="[tag[Monthly]tag[Journal]tag<matchTitle>sort[journal-date]]">
+    <$link class="journal-day-card">
+      <span class="journal-day-card-name">Month</span>
+      <span class="journal-day-card-date"><$text text={{{ [{!!title}split[-]last[]] }}}/></span>
+    </$link>
   </$list>
-</$list>
+</div>
 
 </$let>

@@ -1,0 +1,9 @@
+title: $:/plugins/mblackman/journal/ui/templates/habit-config-item
+
+<div class="tc-menu-list-item">
+<$button class="tc-btn-invisible tc-btn-icon" tooltip="Delete Habit">
+<$action-deletetiddler $tiddler=<<currentTiddler>> />
+{{$:/core/images/delete-button}}
+</$button>
+<$link to=<<currentTiddler>>><$view field="caption"/> <$list filter="[<currentTiddler>get[habit-shorthand]trim[]!is[blank]]" variable="shorthand">[<<shorthand>>]</$list> (<$text text={{{ [<currentTiddler>get[habit-type]else[number]] }}}/>)</$link>
+</div>

@@ -1,0 +1,44 @@
+title: $:/plugins/mblackman/journal/config
+tags: $:/tags/ControlPanel/SettingsTab
+caption: Journal
+
+Manage your life within TiddlyWiki
+
+---
+
+!! Plugin Configs
+
+!!! Habits
+
+Manage the habits you want to track.
+
+<table>
+  <tr>
+    <th>Label</th>
+    <th>Shorthand</th>
+    <th>Field Name</th>
+    <th>Type</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td><$edit-text tiddler="$:/temp/journal/new-habit" field="caption" placeholder="e.g. Exercise" class="tc-edit-texteditor" /></td>
+    <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-shorthand" placeholder="Ex" class="tc-edit-texteditor" size="3" /></td>
+    <td><$edit-text tiddler="$:/temp/journal/new-habit" field="journal-field" placeholder="e.g. habit-exercise" class="tc-edit-texteditor" /></td>
+    <td>
+      <$select tiddler="$:/temp/journal/new-habit" field="habit-type" default="number" class="tc-edit-texteditor">
+        <option value="number">Number</option>
+        <option value="checkbox">Checkbox</option>
+        <option value="text">Text</option>
+      </$select>
+    </td>
+    <td>
+      <$button>
+        <$action-createtiddler $basetitle={{{ [{$:/temp/journal/new-habit!!journal-field}addprefix[$:/config/Journal/Habit/]] }}} tags="$:/tags/Journal/Habit" caption={{$:/temp/journal/new-habit!!caption}} habit-shorthand={{{ [{$:/temp/journal/new-habit!!habit-shorthand}trim[]] }}} journal-field={{$:/temp/journal/new-habit!!journal-field}} habit-type={{{ [[$:/temp/journal/new-habit]get[habit-type]else[number]] }}} />
+        <$action-setfield $tiddler="$:/temp/journal/new-habit" caption="" habit-shorthand="" journal-field="" habit-type="number" />
+        Add
+      </$button>
+    </td>
+  </tr>
+</table>
+
+<<list-tagged-draggable tag:"$:/tags/Journal/Habit" subFilter:"!has[draft.of]" itemTemplate:"$:/plugins/mblackman/journal/ui/templates/habit-config-item" emptyMessage:"No habits configured.">>

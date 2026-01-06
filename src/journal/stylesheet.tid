@@ -86,6 +86,24 @@ tags: $:/tags/Stylesheet
   line-height: 1em;
 }
 
+.journal-day-card-habits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.journal-habit-dot {
+  font-size: 0.6em;
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  padding: 1px 3px;
+  border-radius: 4px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
 .journal-habits-container {
   display: grid;
   grid-template-columns: 1fr 1fr; 
