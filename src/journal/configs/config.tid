@@ -75,3 +75,13 @@ Manage the habits you want to track.
     </td>
   </tr>
 </table>
+
+!!! Media Tracking
+
+Enable media consumption tracking (requires `$:/plugins/mblackman/media-importer`).
+
+<$checkbox tiddler="$:/config/Journal/EnableMedia" field="text" checked="yes" unchecked="no" default="yes"> Enable Media Tracking</$checkbox>
+
+<$list filter="[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore" emptyMessage=" //Media Importer plugin is missing.//">
+  //Media Importer plugin detected.//
+</$list>

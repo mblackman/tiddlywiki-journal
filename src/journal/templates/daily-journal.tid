@@ -26,9 +26,11 @@ type: text/vnd.tiddlywiki
   <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
     <$macrocall $name="render-habit-widget" configTiddler=<<habitConfig>> />
   </$list>
-  <div class="journal-span-2">
-    <<media-picker "habit-media" "MediaType" "🎬 Media Consumption">>
-  </div>
+  <$list filter="[[$:/config/Journal/EnableMedia]get[text]else[yes]!match[no]] :filter[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore">
+    <div class="journal-span-2">
+      <<media-picker "habit-media" "MediaType" "🎬 Media Consumption">>
+    </div>
+  </$list>
 </div>
 
 <h3>✨ Reflection</h3>

@@ -71,8 +71,10 @@ type: text/vnd.tiddlywiki
   date:'<$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[0DD]] }}}/>'
 >>
 
-<h3>🎬 Media Consumption</h3>
-<<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
+<$list filter="[[$:/config/Journal/EnableMedia]get[text]else[yes]!match[no]] :filter[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore">
+  <h3>🎬 Media Consumption</h3>
+  <<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
+</$list>
 
 <h3>🗓️ Month in Review</h3>
 
