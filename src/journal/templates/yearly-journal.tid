@@ -2,37 +2,98 @@ title: $:/plugins/mblackman/journal/ui/templates/yearly-journal
 type: text/vnd.tiddlywiki
 
 \whitespace trim
+\define journal-date-text(format) <$text text={{{ [{!!journal-date}format:date[$format$]] }}}/>
 
 <$let 
   currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
   matchTitle={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
 >
 
-<<journal-nav "Yearly" "">>
+<<journal-nav "Yearly" """
+  <div class="journal-header-container">
+    <<journal-grid
+      gridClass:"journal-months-grid"
+      filter:"[tag[Monthly]tag[Journal]year<matchTitle>sort[journal-date]]"
+      name:'<<journal-date-text "0MM">>'
+      date:'<<journal-date-text "MMM">>'
+    >>
+  </div>
+""">>
 
-<h3>✨ Yearly Reflection</h3>
+<h3>🗓️ Annual Review</h3>
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">🏆 Big Wins</span>
-      <$edit-text field="highlight" class="tc-edit-texteditor journal-input" placeholder="What were my big wins this year?" />
-  </div>
-  <div>
-      <span class="journal-sublabel">Detailed Wins</span>
-      <<journal-quick-add wins-log "Add a win...">>
-      <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+      <span class="journal-label">1. What were the major highlights and themes of this year?</span>
+      <$edit-text field="year-highlights" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">📉 Challenges</span>
-      <$edit-text field="lowlight" class="tc-edit-texteditor journal-input" placeholder="What challenges did I face?" />
+      <span class="journal-label">2. What were the biggest challenges I overcame this year?</span>
+      <$edit-text field="year-challenges" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
-  <div>
-      <span class="journal-sublabel">Detailed Challenges</span>
-      <<journal-quick-add challenges-log "Add a challenge...">>
-      <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+</div>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">3. How did this year align with my long-term vision and life goals?</span>
+      <$edit-text field="year-vision" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">4. What is one key lesson I learned this year?</span>
+      <$edit-text field="year-lesson" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">5. How have I grown or changed this year?</span>
+      <$edit-text field="year-growth" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<h3>🚀 Looking Forward to Next Year</h3>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">1. What are my top 3 priorities/goals for next year?</span>
+      <$edit-text field="next-year-priorities" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="1... " />
+  </div>
+</div>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">2. What potential obstacles should I anticipate?</span>
+      <$edit-text field="next-year-obstacles" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">3. What am I most excited to start or continue?</span>
+      <$edit-text field="next-year-excitement" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+  </div>
+</div>
+
+<h3>🎯 Annual Goals</h3>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">Define 3-5 overarching goals.</span>
+      <$edit-text field="annual-goals" class="tc-edit-texteditor journal-input" tag="textarea" min-height="150px" placeholder="- [ ] Goal 1: ... - Progress: " />
+  </div>
+</div>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">Annual Goal Review</span>
+      <span class="journal-sublabel">Reflect on your progress towards the goals defined above.</span>
+      <$edit-text field="annual-goals-review" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 

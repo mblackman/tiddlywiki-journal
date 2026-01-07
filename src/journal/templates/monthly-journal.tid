@@ -9,16 +9,16 @@ type: text/vnd.tiddlywiki
 >
 
 <<journal-nav "Monthly" """
-  <$let 
-    yearTitle={{!!year}}
-  >
-  <$list filter="[<yearTitle>!is[blank]]" variable="ignore">
-    <$let tags={{{ [[Journal]] [[Yearly]] +[join[ ]] }}}>
-      <div class="journal-header-container">
-        <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags=<<tags>> tooltip="Open Yearly Review" journalDate=<<now "YYYY0101120000000">> />
-      </div>
-    </$let>
-  </$list>
+  <$let yearTitle={{!!year}}>
+    <div class="journal-header-container">
+      <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags="Journal Yearly" tooltip="Open Yearly Review" journalDate=<<now "YYYY0MM01120000000">> />
+      <<journal-grid
+        gridClass:"journal-weeks-grid"
+        filter:"[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]"
+        name:"Week"
+        date:'<$text text={{{ [{!!title}split[W]last[1]] }}}/>'
+      >>
+    </div>
   </$let>
 """>>
 
@@ -26,23 +26,15 @@ type: text/vnd.tiddlywiki
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">🏆 Big Wins</span>
-      <$edit-text field="highlight" class="tc-edit-texteditor journal-input" placeholder="What were my big wins this month?" />
-  </div>
-  <div>
-      <span class="journal-sublabel">Detailed Wins</span>
-      <<journal-quick-add wins-log "Add a win...">>
-      <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+      <span class="journal-label">🏆 What were major highlights and themes of this month?</span>
+      <<journal-quick-add highlights-log "Add a highlight or theme...">>
+      <$edit-text field="highlights-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">📉 Challenges</span>
-      <$edit-text field="lowlight" class="tc-edit-texteditor journal-input" placeholder="What challenges did I face?" />
-  </div>
-  <div>
-      <span class="journal-sublabel">Detailed Challenges</span>
+      <span class="journal-label">📉 What were the biggest challenges I overcame?</span>
       <<journal-quick-add challenges-log "Add a challenge...">>
       <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
@@ -50,13 +42,19 @@ type: text/vnd.tiddlywiki
 
 <div class="journal-section">
   <div class="journal-section-tight">
-      <span class="journal-label">🚀 Improvements</span>
-      <$edit-text field="improvement-highlight" class="tc-edit-texteditor journal-input" placeholder="What could I improve next month?" />
+      <span class="journal-label">🔑 What were key lessons from this month?</span>
+      <<journal-quick-add lessons-log "Add an improvement...">>
+      <$edit-text field="lessons-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
-  <div>
-      <span class="journal-sublabel">Detailed Improvements</span>
-      <<journal-quick-add improvements-log "Add an improvement...">>
-      <$edit-text field="improvements-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
+</div>
+
+<h3>🚀 Looking Forward to Next Month</h3>
+
+<div class="journal-section">
+  <div class="journal-section-tight">
+      <span class="journal-label">What are my top 3 priorities for next month?</span>
+      <<journal-quick-add monthly-priorities "Add improvements...">>
+      <$edit-text field="monthly-priorities" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
