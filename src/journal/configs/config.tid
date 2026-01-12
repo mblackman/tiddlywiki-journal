@@ -78,7 +78,7 @@ Manage the habits you want to track.
 
 !!! Media Tracking
 
-Enable media consumption tracking (requires `$:/plugins/mblackman/media-importer`).
+Enable media consumption tracking (requires [[$:/plugins/mblackman/media-importer|https://github.com/mblackman/tiddlywiki-media-importer]]).
 
 <$checkbox tiddler="$:/config/Journal/EnableMedia" field="text" checked="yes" unchecked="no" default="yes"> Enable Media Tracking</$checkbox>
 
