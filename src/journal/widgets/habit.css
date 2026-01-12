@@ -1,0 +1,22 @@
+.habit-label { display: block; margin-bottom: 4px; font-weight: bold; opacity: 0.9; }
+
+.habit-input {
+    background: transparent;
+    color: <<colour foreground>>;
+    border: 1px solid <<colour table-border>>;
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    line-height: 1.4em;
+    box-sizing: border-box; 
+}
+
+.habit-dot {
+    font-size: 0.6em;
+    background-color: <<colour primary>>;
+    color: <<colour background>>;
+    padding: 1px 3px;
+    border-radius: 4px;
+    line-height: 1;
+    opacity: 0.8;
+  }

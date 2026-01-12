@@ -41,20 +41,7 @@ type: text/vnd.tiddlywiki
         <span class="journal-day-card-name">$name$</span>
         <span class="journal-day-card-date">$date$</span>
         <div class="journal-day-card-habits">
-          <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]" variable="habitConfig">
-            <$let 
-              field={{{ [<habitConfig>get[journal-field]] }}}
-              shorthand={{{ [<habitConfig>get[habit-shorthand]trim[]] }}}
-              type={{{ [<habitConfig>get[habit-type]else[number]] }}}
-              value={{{ [<currentTiddler>get<field>] }}}
-            >
-              <$list filter="[<shorthand>!is[blank]]" variable="ignore">
-                <$list filter="[<type>match[checkbox]then<value>match[yes]]" variable="ignore"><span class="journal-habit-dot" title={{{ [<habitConfig>get[caption]] }}}><$text text=<<shorthand>>/></span></$list>
-                <$list filter="[<type>match[number]then<value>!match[0]!is[blank]]" variable="ignore"><span class="journal-habit-dot" title={{{ [<habitConfig>get[caption]] }}}><$text text=<<shorthand>>/></span></$list>
-                <$list filter="[<type>match[text]then<value>!is[blank]]" variable="ignore"><span class="journal-habit-dot" title={{{ [<habitConfig>get[caption]] }}}><$text text=<<shorthand>>/></span></$list>
-              </$list>
-            </$let>
-          </$list>
+          <$habit-dots />
         </div>
       </$link>
     </$list>
@@ -159,25 +146,5 @@ type: text/vnd.tiddlywiki
       </$list>
     </$let>
   </$list>
-</div>
-\end
-
-\define render-habit-widget(configTiddler)
-<div>
-  <span class="journal-label"><$text text={{{ [<__configTiddler__>get[caption]] }}}/></span>
-  <$let 
-    targetField={{{ [<__configTiddler__>get[journal-field]] }}}
-    habitType={{{ [<__configTiddler__>get[habit-type]else[number]] }}}
-  >
-    <$list filter="[<habitType>match[number]]" variable="ignore">
-       <$edit-text field=<<targetField>> type="number" class="tc-edit-texteditor journal-input" placeholder="0" size="5" />
-    </$list>
-    <$list filter="[<habitType>match[text]]" variable="ignore">
-       <$edit-text field=<<targetField>> class="tc-edit-texteditor journal-input" placeholder="" />
-    </$list>
-    <$list filter="[<habitType>match[checkbox]]" variable="ignore">
-       <$checkbox field=<<targetField>> checked="yes" unchecked="no" default="no" />
-    </$list>
-  </$let>
 </div>
 \end
