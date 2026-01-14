@@ -3,3 +3,9 @@ title: $:/plugins/mblackman/journal/readme
 ! Journal
 
 My personal journal structure and styles for TiddlyWiki. Log daily activities, thoughts, and reflections in a structured format that roll up into summary views for reflection.
+
+This plugin provides templates, macros, and styles to create daily, weekly, monthly, and yearly journal entries with sections for habits, wins, challenges, and gratitude.
+
+Requires [[dayjs Plugin|https://github.com/mblackman/tiddlywiki-dayjs-plugin]] to function.
+
+Optional [[Media Importer Plugin|https://github.com/mblackman/tiddlywiki-media-importer]] integration for logging media consumption.
