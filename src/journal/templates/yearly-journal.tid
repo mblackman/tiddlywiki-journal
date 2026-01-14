@@ -108,15 +108,30 @@ type: text/vnd.tiddlywiki
   <<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
 </$list>
 
-<h3>️ Year in Review</h3>
+<h3>📝 Monthly Review Roll-up</h3>
 
-<div class="journal-months-grid">
-  <$list filter="[tag[Monthly]tag[Journal]tag<matchTitle>sort[journal-date]]">
-    <$link class="journal-day-card">
-      <span class="journal-day-card-name">Month</span>
-      <span class="journal-day-card-date"><$text text={{{ [{!!title}split[-]last[]] }}}/></span>
-    </$link>
+<$list filter="[tag[Monthly]tag[Journal]year<matchTitle>sort[journal-date]]">
+  <$list filter="[all[current]has[highlights-log]] [all[current]has[challenges-log]] [all[current]has[lessons-log]] +[limit[1]]" variable="ignore">
+    <div class="journal-section">
+      <h4><$link><<journal-date-text "MMM">></$link></h4>
+      
+      <$list filter="[all[current]has[highlights-log]]">
+        <strong>Highlights:</strong>
+        <blockquote><$transclude field="highlights-log" mode="block"/></blockquote>
+      </$list>
+      
+      <$list filter="[all[current]has[challenges-log]]">
+        <strong>Challenges:</strong>
+        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
+      </$list>
+
+      <$list filter="[all[current]has[lessons-log]]">
+        <strong>Lessons:</strong>
+        <blockquote><$transclude field="lessons-log" mode="block"/></blockquote>
+      </$list>
+    </div>
+    <hr style="border: 0; border-top: 1px dashed <<colour table-border>>;">
   </$list>
-</div>
+</$list>
 
 </$let>
