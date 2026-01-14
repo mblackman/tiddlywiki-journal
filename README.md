@@ -2,6 +2,8 @@
 
 My personal journal structure and styles for TiddlyWiki. Log daily activities, thoughts, and reflections in a structured format that roll up into summary views for reflection.
 
+Preview the plugin [Journal Example](https://mblackman.github.io/tiddlywiki-journal/)
+
 ## Features
 
 *   **Structured Entries:** Templates for daily, weekly, monthly, and yearly journal entries.
