@@ -76,13 +76,13 @@ type: text/vnd.tiddlywiki
 
 <h3>🗓️ Month in Review</h3>
 
-<h4>Daily Highlights</h4>
+<h4>Weekly Highlights</h4>
 <div class="journal-section">
-  <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
-    <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] +[limit[1]]" variable="ignore">
+  <$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
+    <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] [all[current]has[improvement-highlight]] +[limit[1]]" variable="ignore">
       <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
         <div style="font-weight: bold; margin-bottom: 6px;">
-          <$link to=<<currentTiddler>>><$text text={{{ [{!!title}split[-]join[]addsuffix[120000000]format:date[0DD ddd]] }}}/></$link>
+          <$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link>
         </div>
         <$list filter="[all[current]has[highlight]]">
           <div style="margin-bottom: 4px; display: flex; gap: 8px;">
@@ -90,13 +90,42 @@ type: text/vnd.tiddlywiki
           </div>
         </$list>
         <$list filter="[all[current]has[lowlight]]">
-          <div style="display: flex; gap: 8px;">
+          <div style="margin-bottom: 4px;display: flex; gap: 8px;">
             <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
+          </div>
+        </$list>
+        <$list filter="[all[current]has[improvement-highlight]]">
+          <div style="display: flex; gap: 8px;">
+            <span style="flex-shrink: 0;">🚀</span> <span>{{!!improvement-highlight}}</span>
           </div>
         </$list>
       </div>
     </$list>
   </$list>
 </div>
+
+<h4>Detailed Logs</h4>
+<$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
+  <$list filter="[all[current]has[wins-log]] [all[current]has[challenges-log]] [all[current]has[improvements-log]] +[limit[1]]" variable="ignore">
+    <div class="journal-section">
+      <h5><$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link></h5>
+      
+      <$list filter="[all[current]has[wins-log]]">
+        <strong>Wins:</strong>
+        <blockquote><$transclude field="wins-log" mode="block"/></blockquote>
+      </$list>
+      
+      <$list filter="[all[current]has[challenges-log]]">
+        <strong>Challenges:</strong>
+        <blockquote><$transclude field="challenges-log" mode="block"/></blockquote>
+      </$list>
+
+      <$list filter="[all[current]has[improvements-log]]">
+        <strong>Improvements:</strong>
+        <blockquote><$transclude field="improvements-log" mode="block"/></blockquote>
+      </$list>
+    </div>
+  </$list>
+</$list>
 
 </$let>
