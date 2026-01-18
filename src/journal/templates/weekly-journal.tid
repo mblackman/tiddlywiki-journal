@@ -75,7 +75,7 @@ type: text/vnd.tiddlywiki
 
 <$list filter="[[$:/config/Journal/EnableMedia]get[text]else[yes]!match[no]] :filter[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore">
   <h3>🎬 Media Consumption</h3>
-  <<media-consumption-summary "[tag[Daily]tag[Journal]tag<matchTitle>]">>
+  <$MediaConsumptionSummary startDate={{{ [tag[Daily]tag[Journal]tag<matchTitle>sort[title]first[]] }}} endDate={{{ [tag[Daily]tag[Journal]tag<matchTitle>sort[title]last[]] }}} readonly="true" />
 </$list>
 
 <h3>🗓️ Week in Review</h3>
