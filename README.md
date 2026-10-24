@@ -1,19 +1,27 @@
 # tiddlywiki-journal
 
-My personal journal structure and styles for TiddlyWiki. Log daily activities, thoughts, and reflections in a structured format that roll up into summary views for reflection.
+Structured daily, weekly, monthly, and yearly journaling and habit tracking for TiddlyWiki (`$:/plugins/mblackman/journal`). Log daily activities, habits, wins, challenges, and gratitude in a structured format that automatically rolls up into weekly, monthly, and annual review views.
 
-Preview the plugin [Journal Example](https://mblackman.github.io/tiddlywiki-journal/)
+Preview the plugin: **[Journal Demo](https://mblackman.github.io/tiddlywiki-journal/)**
 
 ## Features
 
-*   **Structured Entries:** Templates for daily, weekly, monthly, and yearly journal entries.
-*   **Daily Tracking:** Dedicated sections for habits, wins, challenges, and gratitude lists.
-*   **Roll-ups:** Daily notes automatically roll up to weeks, months, and years for easy review.
-*   **Media Integration:** Optional integration for logging media consumption (movies, books, etc.).
+* **Structured Entries**: Templates for Daily (`YYYY-MM-DD`), Weekly (`GGGG-[W]WW`), Monthly (`YYYY-MM`), and Yearly (`YYYY`) journal entries.
+* **Configurable Habit Tracking**: Track numeric, checkbox, and text habits per day with visual habit indicator dots on calendar cards and automatic summary tables across weeks, months, and years.
+* **Hierarchical Roll-Ups**: Daily highlights, wins, gratitude lists, and challenges automatically roll up into Weekly, Monthly, and Yearly reviews.
+* **1-Click Access**: Includes a **Journal** sidebar tab, a page controls toolbar button, and a **Journal Dashboard** (`$:/plugins/mblackman/journal/dashboard`) with tiles for Today, Week, Month, Year, date jumping, and recent entries.
+* **Built-In Day.js Engine**: Bundles Day.js (with `isoWeek` and `advancedFormat`) directly inside the plugin and exposes both the `[dayjs[...]]` filter operator and `<<dayjs>>` macro — no separate date plugin required.
+* **Media Integration (Optional)**: Integrates with [Media Importer (`$:/plugins/mblackman/media-importer`)](https://github.com/mblackman/tiddlywiki-media-importer) for logging daily media consumption.
 
-## Dependencies
+## Development & Build Commands
 
-This plugin requires the following to function correctly:
+```bash
+# Start live-reload development server on http://127.0.0.1:8080
+npm run dev
 
-*   **[dayjs Plugin](https://github.com/mblackman/tiddlywiki-dayjs-plugin)** (Required): Used for date manipulation and formatting.
-*   **[Media Importer Plugin](https://github.com/mblackman/tiddlywiki-media-importer)** (Optional): Enables the media picker for logging consumption.
+# Run Jest test suite
+npm test
+
+# Build plugin artifacts (build/journal.tid, build/journal-plugin.json, dist/journal-plugin.json), demo wiki, and plugin library
+npm run build-all
+```

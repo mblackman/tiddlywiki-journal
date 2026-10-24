@@ -1,0 +1,6 @@
+title: $:/plugins/mblackman/journal/ui/sidebar-tab
+tags: $:/tags/SideBar
+caption: Journal
+type: text/vnd.tiddlywiki
+
+{{$:/plugins/mblackman/journal/dashboard}}

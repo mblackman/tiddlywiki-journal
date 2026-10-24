@@ -1,0 +1,430 @@
+/* --- Journal Navigation Container --- */
+.journal-nav {
+  background-color: <<colour code-background>>;
+  border: 1px solid <<colour table-border>>;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Weekly/Monthly/Yearly Header Layout --- */
+.journal-header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* --- Days Grid --- */
+.journal-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* --- Grids for Monthly/Yearly --- */
+.journal-weeks-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.journal-months-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+a.journal-day-card,
+.journal-day-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: <<colour tiddler-background>>;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  padding: 8px 4px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-height: 52px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+a.journal-day-card:hover,
+.journal-day-card:hover {
+  border-color: <<colour primary>>;
+  background-color: <<colour selection-background>>;
+  color: <<colour selection-foreground>>;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+}
+
+.journal-day-card-name {
+  font-size: 0.7em;
+  text-transform: uppercase;
+  color: <<colour muted-foreground>>;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+a.journal-day-card:hover .journal-day-card-name,
+a.journal-day-card:hover .journal-day-card-date {
+  color: <<colour selection-foreground>>;
+}
+
+.journal-day-card-date {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: <<colour foreground>>;
+  line-height: 1.1em;
+}
+
+.journal-day-card-habits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.journal-habits-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  background-color: <<colour code-background>>;
+  border: 1px solid <<colour table-border>>;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.journal-span-2 {
+  grid-column: span 2;
+}
+
+/* --- Journal Controls & Dashboard --- */
+.journal-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+button.journal-dashboard-tile,
+.journal-dashboard-tile {
+  background-color: <<colour tiddler-background>>;
+  border: 1px solid <<colour table-border>>;
+  color: <<colour foreground>>;
+  border-radius: 8px;
+  padding: 12px 8px;
+  font-size: 0.95em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+button.journal-dashboard-tile:hover,
+.journal-dashboard-tile:hover {
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  border-color: <<colour primary>>;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.journal-dashboard-icon {
+  font-size: 1.4em;
+  margin-bottom: 4px;
+}
+
+.journal-history-section {
+  background-color: <<colour code-background>>;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.journal-history-header {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  color: <<colour muted-foreground>>;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.journal-date-jumper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.journal-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+a.journal-recent-item,
+.journal-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 10px 12px;
+  color: <<colour foreground>>;
+  text-decoration: none;
+  background-color: <<colour tiddler-background>>;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
+}
+
+a.journal-recent-item:hover,
+.journal-recent-item:hover {
+  background-color: <<colour selection-background>>;
+  color: <<colour selection-foreground>>;
+  border-color: <<colour primary>>;
+  text-decoration: none;
+}
+
+.journal-recent-arrow {
+  opacity: 0.45;
+  font-size: 0.85em;
+}
+.journal-recent-item:hover .journal-recent-arrow {
+  opacity: 1;
+}
+
+.journal-empty-hint {
+  font-size: 0.9em;
+  font-style: italic;
+  color: <<colour muted-foreground>>;
+  padding: 8px 4px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .journal-days-grid {
+    gap: 4px;
+  }
+  .journal-weeks-grid,
+  .journal-months-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .journal-nav {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .journal-header-container {
+    order: -1;
+  }
+  .journal-nav > a,
+  .journal-nav > button {
+    width: 100%;
+    text-align: center;
+  }
+  .journal-habits-container {
+    grid-template-columns: 1fr;
+  }
+  .journal-span-2 {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 300px) {
+  .journal-dashboard {
+    grid-template-columns: 1fr;
+  }
+  button.journal-dashboard-tile,
+  .journal-dashboard-tile {
+    flex-direction: row;
+    gap: 10px;
+    text-align: left;
+    padding: 10px;
+  }
+}
+
+/* --- Global Button Styles (high specificity to override button.tc-btn-invisible) --- */
+button.tc-btn-invisible.journal-btn,
+button.journal-btn,
+.journal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  background-color: <<colour tiddler-background>>;
+  color: <<colour foreground>>;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+button.tc-btn-invisible.journal-btn:hover,
+button.journal-btn:hover,
+.journal-btn:hover {
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  border-color: <<colour primary>>;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+/* Primary Button */
+button.tc-btn-invisible.journal-btn.journal-btn-primary,
+button.journal-btn.journal-btn-primary,
+.journal-btn-primary {
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  border: 1px solid <<colour primary>>;
+  font-weight: 700;
+}
+
+button.tc-btn-invisible.journal-btn.journal-btn-primary:hover,
+button.journal-btn.journal-btn-primary:hover,
+.journal-btn-primary:hover {
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  border-color: <<colour primary>>;
+  filter: brightness(1.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Disabled Button */
+span.journal-btn.journal-btn-disabled,
+button.journal-btn.journal-btn-disabled,
+.journal-btn-disabled,
+.journal-btn-disabled:hover {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: <<colour tiddler-editor-background>>;
+  color: <<colour muted-foreground>>;
+  border: 1px dashed <<colour table-border>>;
+  box-shadow: none;
+}
+
+/* --- Global Input Styles --- */
+.tc-tiddler-frame input.journal-input,
+.tc-tiddler-frame textarea.journal-input,
+input.journal-input,
+textarea.journal-input,
+.journal-input {
+  background-color: <<colour tiddler-background>>;
+  color: <<colour foreground>>;
+  border: 1px solid <<colour table-border>>;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  line-height: 1.4em;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.tc-tiddler-frame input.journal-input:focus,
+.tc-tiddler-frame textarea.journal-input:focus,
+input.journal-input:focus,
+textarea.journal-input:focus,
+.journal-input:focus {
+  border-color: <<colour primary>>;
+  outline: none;
+}
+
+.journal-input::placeholder {
+  color: <<colour muted-foreground>>;
+  opacity: 0.7;
+}
+
+/* Select Dropdown Styling */
+select.journal-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: <<colour tiddler-background>>;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding: 4px 32px 4px 8px;
+  cursor: pointer;
+}
+
+/* --- Global Layout & Typography --- */
+.journal-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+  color: <<colour foreground>>;
+}
+.journal-sublabel {
+  display: block;
+  font-size: 0.85em;
+  color: <<colour muted-foreground>>;
+  margin-bottom: 4px;
+  font-style: italic;
+}
+.journal-section {
+  margin-bottom: 25px;
+}
+.journal-section-tight {
+  margin-bottom: 10px;
+}
+.journal-flex-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: center;
+  width: 100%;
+}
+.journal-flex-grow {
+  flex-grow: 1;
+}
+.journal-full-width {
+  width: 100%;
+  display: block;
+}
+
+.journal-config-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.journal-config-table th,
+.journal-config-table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid <<colour table-border>>;
+}

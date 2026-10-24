@@ -1,0 +1,12 @@
+{
+  "title": "$:/plugins/mblackman/journal",
+  "name": "Journal",
+  "author": "mblackman",
+  "description": "Structured daily, weekly, monthly, and yearly journaling and habit tracking for TiddlyWiki",
+  "core-version": ">=5.3.2",
+  "source": "https://github.com/mblackman/tiddlywiki-journal",
+  "plugin-type": "plugin",
+  "version": "0.2.0",
+  "stability": "STABILITY_2_STABLE",
+  "list": "readme config tree"
+}

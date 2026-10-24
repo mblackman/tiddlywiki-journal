@@ -1,0 +1,7 @@
+title: $:/config/Journal/Habit/habit-meditate
+tags: $:/tags/Journal/Habit
+caption: Meditate
+habit-shorthand: Md
+journal-field: habit-meditate
+habit-type: checkbox
+

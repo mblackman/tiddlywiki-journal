@@ -1,0 +1,104 @@
+title: $:/plugins/mblackman/journal/macros
+tags: $:/tags/Macro
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+
+\define newline()
+
+\end
+
+\define journal-nav(period, upButton)
+<$let
+  prevTiddler={{{ [tag[Journal]tag[$period$]sort[title]before<currentTiddler>] }}}
+  nextTiddler={{{ [tag[Journal]tag[$period$]sort[title]after<currentTiddler>] }}}
+>
+<div class="journal-nav">
+  <% if [<prevTiddler>!is[blank]] %>
+    <$button class="tc-btn-invisible journal-btn" tooltip={{{ [[Previous $period$: ]addsuffix<prevTiddler>] }}}>
+      <$action-navigate $to=<<prevTiddler>>/>
+      ← Prev
+    </$button>
+  <% else %>
+    <span class="journal-btn journal-btn-disabled" title="No earlier $period$ entry">← Prev</span>
+  <% endif %>
+  $upButton$
+  <% if [<nextTiddler>!is[blank]] %>
+    <$button class="tc-btn-invisible journal-btn" tooltip={{{ [[Next $period$: ]addsuffix<nextTiddler>] }}}>
+      <$action-navigate $to=<<nextTiddler>>/>
+      Next →
+    </$button>
+  <% else %>
+    <span class="journal-btn journal-btn-disabled" title="No newer $period$ entry">Next →</span>
+  <% endif %>
+</div>
+</$let>
+\end
+
+\define journal-parent-btn(target, label, tags, tooltip, year, month, week, journalDate, class:"journal-btn")
+<$list filter="[<__target__>!is[blank]]" variable="ignore">
+<$button class="tc-btn-invisible $class$" tooltip="$tooltip$">
+  <$list filter="[<__target__>!is[tiddler]]" variable="ignore">
+    <$action-setfield $tiddler=<<__target__>> tags=<<__tags__>> />
+  </$list>
+  <$list filter="[<__year__>!is[blank]] :filter[<__target__>get[year]is[blank]]" variable="ignore">
+    <$action-setfield $tiddler=<<__target__>> year=<<__year__>> />
+  </$list>
+  <$list filter="[<__month__>!is[blank]] :filter[<__target__>get[month]is[blank]]" variable="ignore">
+    <$action-setfield $tiddler=<<__target__>> month=<<__month__>> />
+  </$list>
+  <$list filter="[<__week__>!is[blank]] :filter[<__target__>get[week]is[blank]]" variable="ignore">
+    <$action-setfield $tiddler=<<__target__>> week=<<__week__>> />
+  </$list>
+  <$list filter="[<__journalDate__>!is[blank]] :filter[<__target__>get[journal-date]is[blank]]" variable="ignore">
+    <$action-setfield $tiddler=<<__target__>> journal-date=<<__journalDate__>> />
+  </$list>
+  <$action-navigate $to=<<__target__>> />
+  ↑ $label$
+</$button>
+</$list>
+\end
+
+\define journal-grid(gridClass, filter, name, date)
+  <div class="$gridClass$">
+    <$list filter="""$filter$""">
+      <$link class="journal-day-card">
+        <span class="journal-day-card-name">$name$</span>
+        <span class="journal-day-card-date">$date$</span>
+        <div class="journal-day-card-habits">
+          <$habit-dots />
+        </div>
+      </$link>
+    </$list>
+  </div>
+\end
+
+\define journal-quick-add(field, placeholder)
+<$let
+  tempTiddler={{{ [[$:/temp/journal/quickadd/]addsuffix<currentTiddler>addsuffix[/]addsuffix[$field$]] }}}
+  newline={{{ [charcode[10]] }}}
+>
+  <div class="journal-flex-row">
+    <div class="journal-flex-grow">
+      <$keyboard key="enter" class="journal-full-width">
+        <$let entry={{{ [<tempTiddler>get[text]trim[]] }}}>
+          <$list filter="[<entry>!is[blank]]" variable="ignore">
+            <$action-setfield $field="$field$" $value={{{ [<currentTiddler>get[$field$]!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
+            <$action-setfield $tiddler=<<tempTiddler>> text="" />
+          </$list>
+        </$let>
+        <$edit-text tiddler=<<tempTiddler>> tag="input" class="journal-input" placeholder="$placeholder$" default="" />
+      </$keyboard>
+    </div>
+    <$button class="tc-btn-invisible journal-btn journal-btn-primary" tooltip="Add Bullet">
+      Add
+      <$let entry={{{ [<tempTiddler>get[text]trim[]] }}}>
+        <$list filter="[<entry>!is[blank]]" variable="ignore">
+          <$action-setfield $field="$field$" $value={{{ [<currentTiddler>get[$field$]!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
+          <$action-setfield $tiddler=<<tempTiddler>> text="" />
+        </$list>
+      </$let>
+    </$button>
+  </div>
+</$let>
+\end

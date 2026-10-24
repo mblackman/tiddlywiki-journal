@@ -1,0 +1,9 @@
+title: 2026-10
+tags: Journal Monthly 2026
+journal-date: 20261001120000000
+year: 2026
+highlights-log: * Unified all TiddlyWiki plugins onto the same build and test architecture
+challenges-log: * Balancing feature work with tooling cleanup
+lessons-log: * Self-contained plugins with zero external dependencies are much easier to maintain
+monthly-priorities: * Daily journaling streak
+

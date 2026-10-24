@@ -1,0 +1,7 @@
+title: $:/config/Journal/Habit/habit-reading
+tags: $:/tags/Journal/Habit
+caption: Reading (pages)
+habit-shorthand: Rd
+journal-field: habit-reading
+habit-type: number
+

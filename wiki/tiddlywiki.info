@@ -1,9 +1,0 @@
-{
-  "description": "Basic client-server edition",
-  "plugins": [],
-  "themes": [
-    "tiddlywiki/vanilla"
-  ],
-  "languages": [],
-  "build": {}
-}

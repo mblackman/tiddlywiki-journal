@@ -1,0 +1,95 @@
+.habit-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+  color: <<colour foreground>>;
+}
+
+.tc-tiddler-frame input.habit-input,
+input.habit-input,
+.habit-input {
+  background-color: <<colour tiddler-background>>;
+  color: <<colour foreground>>;
+  border: 1px solid <<colour table-border>>;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  line-height: 1.4em;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.tc-tiddler-frame input.habit-input:focus,
+input.habit-input:focus,
+.habit-input:focus {
+  border-color: <<colour primary>>;
+  outline: none;
+}
+
+.habit-dot {
+  font-size: 0.65em;
+  font-weight: 700;
+  background-color: <<colour primary>>;
+  color: <<colour background>>;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+/* --- Habit Summary Table --- */
+.journal-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  background-color: <<colour tiddler-background>>;
+  border: 1px solid <<colour table-border>>;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.journal-summary-thead-tr {
+  background-color: <<colour table-header-background>>;
+  border-bottom: 2px solid <<colour table-border>>;
+}
+
+.journal-summary-th-left {
+  text-align: left;
+  padding: 8px 10px;
+  color: <<colour foreground>>;
+}
+
+.journal-summary-th-center {
+  text-align: center;
+  padding: 8px 10px;
+  color: <<colour foreground>>;
+}
+
+.journal-summary-tr {
+  border-bottom: 1px solid <<colour table-border>>;
+}
+
+.journal-summary-td-label {
+  padding: 6px 10px;
+  font-weight: 500;
+}
+
+.journal-summary-td-value {
+  text-align: center;
+  padding: 6px 10px;
+}
+
+.journal-summary-totals-tr {
+  font-weight: bold;
+  background-color: <<colour table-header-background>>;
+  border-top: 2px solid <<colour table-border>>;
+}
+
+.journal-summary-totals-td-label {
+  padding: 8px 10px;
+}
+
+.journal-summary-totals-td-value {
+  text-align: center;
+  padding: 8px 10px;
+}

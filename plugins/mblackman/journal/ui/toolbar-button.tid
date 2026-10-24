@@ -1,0 +1,16 @@
+title: $:/plugins/mblackman/journal/ui/toolbar-button
+tags: $:/tags/PageControls
+caption: {{$:/plugins/mblackman/journal/images/journal-icon}} Journal
+description: Open the Journal Dashboard
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+<$button class=<<tv-config-toolbar-class>> tooltip="Open the Journal Dashboard" aria-label="Journal Dashboard">
+  <$list filter="[<tv-config-toolbar-icons>match[yes]]">
+    {{$:/plugins/mblackman/journal/images/journal-icon}}
+  </$list>
+  <$list filter="[<tv-config-toolbar-text>match[yes]]">
+    <span class="tc-btn-text"><$text text="Journal"/></span>
+  </$list>
+  <$action-navigate $to="$:/plugins/mblackman/journal/dashboard"/>
+</$button>

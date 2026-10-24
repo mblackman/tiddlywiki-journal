@@ -1,0 +1,111 @@
+title: $:/plugins/mblackman/journal/config
+tags: $:/tags/ControlPanel/SettingsTab
+caption: Journal
+type: text/vnd.tiddlywiki
+
+Manage your journal and habit tracking within TiddlyWiki.
+
+---
+
+!! Habits
+
+Configure the daily habits you want to track.
+
+<table class="journal-config-table">
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Shorthand</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]">
+      <tr>
+        <td><$edit-text field="caption" class="tc-edit-texteditor" /></td>
+        <td><$edit-text field="habit-shorthand" class="tc-edit-texteditor" size="3" /></td>
+        <td>
+          <$edit-text field="journal-field" class="tc-edit-texteditor" />
+          <$let currentField={{!!journal-field}} titleField={{{ [<currentTiddler>removeprefix[$:/config/Journal/Habit/]] }}} configTiddler=<<currentTiddler>>>
+            <$list filter="[<currentField>!match<titleField>!is[blank]]">
+              <$button class="tc-btn-mini" tooltip="Rename field in all journals and update config title">
+                Update
+                <$list filter="[tag[Daily]tag[Journal]has<titleField>]" variable="journalTiddler">
+                   <$action-setfield $tiddler=<<journalTiddler>> $field=<<currentField>> $value={{{ [<journalTiddler>get<titleField>] }}} />
+                   <$action-deletefield $tiddler=<<journalTiddler>> $field=<<titleField>> />
+                </$list>
+                <$action-createtiddler $basetitle={{{ [<currentField>addprefix[$:/config/Journal/Habit/]] }}} $template=<<configTiddler>> />
+                <$action-deletetiddler $tiddler=<<configTiddler>> />
+              </$button>
+            </$list>
+          </$let>
+        </td>
+        <td>
+          <$select field="habit-type" class="tc-edit-texteditor">
+            <option value="number">Number</option>
+            <option value="checkbox">Checkbox</option>
+            <option value="text">Text</option>
+          </$select>
+        </td>
+        <td>
+          <$button class="tc-btn-invisible tc-btn-icon" tooltip="Delete Habit">
+            <$action-deletetiddler $tiddler=<<currentTiddler>> />
+            {{$:/core/images/delete-button}}
+          </$button>
+        </td>
+      </tr>
+    </$list>
+    <tr>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="caption" placeholder="e.g. Exercise" class="tc-edit-texteditor" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-shorthand" placeholder="Ex" class="tc-edit-texteditor" size="3" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="journal-field" placeholder="e.g. habit-exercise" class="tc-edit-texteditor" /></td>
+      <td>
+        <$select tiddler="$:/temp/journal/new-habit" field="habit-type" default="number" class="tc-edit-texteditor">
+          <option value="number">Number</option>
+          <option value="checkbox">Checkbox</option>
+          <option value="text">Text</option>
+        </$select>
+      </td>
+      <td>
+        <$button class="journal-btn journal-btn-primary">
+          <$let
+            rawCaption={{{ [{$:/temp/journal/new-habit!!caption}trim[]] }}}
+            rawShorthand={{{ [{$:/temp/journal/new-habit!!habit-shorthand}trim[]] }}}
+            rawField={{{ [{$:/temp/journal/new-habit!!journal-field}trim[]] }}}
+            autoField={{{ [<rawCaption>lowercase[]search-replace:g:regexp[^a-z0-9]+,[-]trim[-]addprefix[habit-]] }}}
+            finalField={{{ [<rawField>!is[blank]else<autoField>] }}}
+            finalShorthand={{{ [<rawShorthand>!is[blank]] ~[<rawCaption>split[]first[2]join[]] }}}
+            finalCaption={{{ [<rawCaption>!is[blank]else<finalField>] }}}
+          >
+            <$list filter="[<finalField>!is[blank]!match[habit-]]" variable="ignore">
+              <$action-createtiddler
+                $basetitle={{{ [<finalField>addprefix[$:/config/Journal/Habit/]] }}}
+                tags="$:/tags/Journal/Habit"
+                caption=<<finalCaption>>
+                habit-shorthand=<<finalShorthand>>
+                journal-field=<<finalField>>
+                habit-type={{{ [[$:/temp/journal/new-habit]get[habit-type]else[number]] }}}
+              />
+              <$action-setfield $tiddler="$:/temp/journal/new-habit" caption="" habit-shorthand="" journal-field="" habit-type="number" />
+            </$list>
+          </$let>
+          Add
+        </$button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+!! Media Tracking
+
+Enable media consumption tracking (requires [[$:/plugins/mblackman/media-importer|https://github.com/mblackman/tiddlywiki-media-importer]]).
+
+<$checkbox tiddler="$:/config/Journal/EnableMedia" field="text" checked="yes" unchecked="no" default="yes"> Enable Media Tracking</$checkbox>
+
+<$list filter="[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore" emptyMessage=" //Media Importer plugin is not installed.//">
+  //Media Importer plugin detected.//
+</$list>

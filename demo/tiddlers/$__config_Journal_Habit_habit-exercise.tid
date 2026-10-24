@@ -1,0 +1,7 @@
+title: $:/config/Journal/Habit/habit-exercise
+tags: $:/tags/Journal/Habit
+caption: Exercise (mins)
+habit-shorthand: Ex
+journal-field: habit-exercise
+habit-type: number
+
