@@ -16,6 +16,7 @@ const demoDir = path.join(rootDir, "demo");
 const debugDir = path.join(rootDir, "debug");
 const twBin = path.join(rootDir, "node_modules", "tiddlywiki", "tiddlywiki.js");
 const port = process.env.PORT || "8080";
+const host = process.env.HOST || "0.0.0.0";
 
 let tiddlyWikiProcess = null;
 let debounceTimer = null;
@@ -59,10 +60,10 @@ function startServer() {
   if (tiddlyWikiProcess) return;
   bundleDayjs();
   syncDebugWiki();
-  console.log(`🌐 Starting Journal dev server on http://127.0.0.1:${port} ...`);
+  console.log(`🌐 Starting Journal dev server on http://${host}:${port} ...`);
   tiddlyWikiProcess = spawn(
     process.execPath,
-    [twBin, "debug", "--listen", `port=${port}`, "host=127.0.0.1"],
+    [twBin, "debug", "--listen", `port=${port}`, `host=${host}`],
     {
       stdio: "inherit",
       cwd: rootDir,

@@ -3,8 +3,7 @@ type: text/vnd.tiddlywiki
 
 \whitespace trim
 \import [[$:/plugins/mblackman/journal/macros]]
-\define journal-month-num() <$text text={{{ [{!!title}addsuffix[-01]dayjs[MM]] ~[{!!journal-date}format:date[0MM]] }}}/>
-\define journal-month-name() <$text text={{{ [{!!title}addsuffix[-01]dayjs[MMM]] ~[{!!journal-date}format:date[MMM]] }}}/>
+\procedure journal-month-name() <$text text={{{ [{!!title}addsuffix[-01]dayjs[MMM]] ~[{!!journal-date}format:date[MMM]] }}}/>
 
 <$let
   currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
@@ -13,12 +12,7 @@ type: text/vnd.tiddlywiki
 
 <<journal-nav "Yearly" """
   <div class="journal-header-container">
-    <<journal-grid
-      gridClass:"journal-months-grid"
-      filter:"[tag[Monthly]tag[Journal]tag<matchTitle>] [tag[Monthly]tag[Journal]year<matchTitle>] +[unique[]sort[title]]"
-      name:'<<journal-month-num>>'
-      date:'<<journal-month-name>>'
-    >>
+    <$journal-period-grid mode="yearly" period=<<matchTitle>> />
   </div>
 """>>
 
@@ -99,7 +93,7 @@ type: text/vnd.tiddlywiki
   </div>
 </div>
 
-<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+<hr class="journal-hr">
 
 <h3>📊 Habits Summary</h3>
 
@@ -132,7 +126,7 @@ type: text/vnd.tiddlywiki
         <blockquote><$transclude field="lessons-log" mode="block"/></blockquote>
       </$list>
     </div>
-    <hr style="border: 0; border-top: 1px dashed <<colour table-border>>;">
+    <hr class="journal-divider-dashed">
   </$list>
 </$list>
 

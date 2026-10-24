@@ -1,16 +1,46 @@
-.habit-label {
-  display: block;
+.habit-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
   margin-bottom: 4px;
+}
+
+.habit-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
   font-weight: bold;
-  color: <<colour foreground>>;
+  color: var(--tpc-foreground);
+}
+
+.habit-meta-hint {
+  font-size: 0.8em;
+  font-weight: normal;
+  color: var(--tpc-muted-foreground);
+}
+
+.habit-streak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.72em;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background-color: var(--tpc-selection-background);
+  color: var(--tpc-selection-foreground);
+  border: 1px solid var(--tpc-primary);
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .tc-tiddler-frame input.habit-input,
 input.habit-input,
 .habit-input {
-  background-color: <<colour tiddler-background>>;
-  color: <<colour foreground>>;
-  border: 1px solid <<colour table-border>>;
+  background-color: var(--tpc-tiddler-background);
+  color: var(--tpc-foreground);
+  border: 1px solid var(--tpc-table-border);
   width: 100%;
   padding: 8px 10px;
   border-radius: 6px;
@@ -22,18 +52,26 @@ input.habit-input,
 .tc-tiddler-frame input.habit-input:focus,
 input.habit-input:focus,
 .habit-input:focus {
-  border-color: <<colour primary>>;
+  border-color: var(--tpc-primary);
   outline: none;
 }
 
 .habit-dot {
   font-size: 0.65em;
   font-weight: 700;
-  background-color: <<colour primary>>;
-  color: <<colour background>>;
-  padding: 2px 4px;
+  background-color: var(--tpc-primary);
+  color: var(--tpc-background);
+  border: 1px solid var(--tpc-primary);
+  padding: 1px 4px;
   border-radius: 4px;
-  line-height: 1;
+  line-height: 1.1;
+}
+
+.habit-dot.habit-dot-partial {
+  background-color: transparent;
+  color: var(--tpc-foreground);
+  border: 1px dashed var(--tpc-primary);
+  opacity: 0.85;
 }
 
 /* --- Habit Summary Table --- */
@@ -42,31 +80,44 @@ input.habit-input:focus,
   border-collapse: collapse;
   margin-top: 12px;
   margin-bottom: 16px;
-  background-color: <<colour tiddler-background>>;
-  border: 1px solid <<colour table-border>>;
+  background-color: var(--tpc-tiddler-background);
+  border: 1px solid var(--tpc-table-border);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .journal-summary-thead-tr {
-  background-color: <<colour table-header-background>>;
-  border-bottom: 2px solid <<colour table-border>>;
+  background-color: var(--tpc-table-header-background);
+  border-bottom: 2px solid var(--tpc-table-border);
 }
 
 .journal-summary-th-left {
   text-align: left;
   padding: 8px 10px;
-  color: <<colour foreground>>;
+  color: var(--tpc-foreground);
 }
 
 .journal-summary-th-center {
   text-align: center;
   padding: 8px 10px;
-  color: <<colour foreground>>;
+  color: var(--tpc-foreground);
+}
+
+.habit-th-header {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.habit-th-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .journal-summary-tr {
-  border-bottom: 1px solid <<colour table-border>>;
+  border-bottom: 1px solid var(--tpc-table-border);
 }
 
 .journal-summary-td-label {
@@ -81,8 +132,16 @@ input.habit-input:focus,
 
 .journal-summary-totals-tr {
   font-weight: bold;
-  background-color: <<colour table-header-background>>;
-  border-top: 2px solid <<colour table-border>>;
+  background-color: var(--tpc-table-header-background);
+  border-top: 2px solid var(--tpc-table-border);
+}
+
+.journal-summary-goals-tr {
+  font-size: 0.88em;
+  font-weight: 600;
+  color: var(--tpc-muted-foreground);
+  background-color: var(--tpc-code-background);
+  border-top: 1px dashed var(--tpc-table-border);
 }
 
 .journal-summary-totals-td-label {

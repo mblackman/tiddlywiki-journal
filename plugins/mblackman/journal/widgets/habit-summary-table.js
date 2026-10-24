@@ -3,7 +3,12 @@ title: $:/plugins/mblackman/journal/widgets/habit-summary-table.js
 type: application/javascript
 module-type: widget
 
-Renders a summary table of habits across weekly, monthly, or yearly journal periods
+Renders a summary table of habits across weekly, monthly, or yearly journal periods.
+Features:
+- Header with habit caption, unit hint, and current `🔥 Xd` streak pill
+- Interactive checkbox toggles in `weekly` and `monthly` modes
+- Supports `habit-agg` (`sum` vs `avg`) for numeric habits
+- 2-row summary footer: `TOTALS / AVG` and `GOAL / COMPLETION` (`met/total (XX%)`)
 \*/
 
 (function () {
@@ -12,8 +17,64 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
   var Widget = require("$:/core/modules/widgets/widget.js").widget;
   var dayjs = require("$:/plugins/mblackman/journal/lib/dayjs.js");
 
-  function formatNumericTotal(sum) {
-    return Number(sum.toFixed(2)).toString();
+  function formatNumericTotal(val) {
+    return Number(val.toFixed(2)).toString();
+  }
+
+  function isHabitMetOnDay(wiki, dateStr, habitTiddler) {
+    var dayTiddler = wiki.getTiddler(dateStr);
+    if (!dayTiddler || !habitTiddler) return false;
+    var field = habitTiddler.fields["journal-field"];
+    if (!field) return false;
+    var type = habitTiddler.fields["habit-type"] || "number";
+    var target = parseFloat(habitTiddler.fields["habit-target"]);
+    var val = dayTiddler.fields[field];
+
+    if (type === "checkbox") {
+      return val === "yes";
+    }
+    if (type === "number") {
+      var num = parseFloat(val);
+      if (isNaN(num) || num <= 0) return false;
+      if (!isNaN(target) && target > 0) {
+        return num >= target;
+      }
+      return true;
+    }
+    return Boolean(val && String(val).trim() !== "");
+  }
+
+  function computeHabitStreak(wiki, habitTiddler, refDateStr) {
+    var baseStr =
+      refDateStr && /^\d{4}-\d{2}-\d{2}$/.test(refDateStr)
+        ? refDateStr
+        : dayjs().format("YYYY-MM-DD");
+    var cursor = dayjs(baseStr);
+    if (!cursor.isValid()) return 0;
+
+    var streak = 0;
+    if (!isHabitMetOnDay(wiki, baseStr, habitTiddler)) {
+      var refTiddler = wiki.getTiddler(baseStr);
+      var field = habitTiddler && habitTiddler.fields["journal-field"];
+      var rawVal = refTiddler && field ? refTiddler.fields[field] : undefined;
+      var hasExplicitValue =
+        rawVal !== undefined && String(rawVal).trim() !== "";
+      if (hasExplicitValue) {
+        return 0;
+      }
+      cursor = cursor.subtract(1, "day");
+    }
+
+    for (var step = 0; step < 3660; step++) {
+      var dStr = cursor.format("YYYY-MM-DD");
+      if (isHabitMetOnDay(wiki, dStr, habitTiddler)) {
+        streak++;
+        cursor = cursor.subtract(1, "day");
+      } else {
+        break;
+      }
+    }
+    return streak;
   }
 
   function HabitSummaryTableWidget(parseTreeNode, options) {
@@ -111,6 +172,25 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
         : [];
     }
 
+    var allDaysInPeriod =
+      mode === "yearly"
+        ? this.matchTitle
+          ? this.wiki.filterTiddlers(
+              "[tag[Daily]tag[Journal]tag[" +
+                escapedMatch +
+                "]] [tag[Daily]tag[Journal]year[" +
+                escapedMatch +
+                "]] +[unique[]sort[title]]",
+              this
+            )
+          : []
+        : this.rowTitles;
+
+    var streakRefDate =
+      allDaysInPeriod.length > 0
+        ? allDaysInPeriod[allDaysInPeriod.length - 1]
+        : dayjs().format("YYYY-MM-DD");
+
     var firstColText = mode === "yearly" ? "Month" : "Day";
     var headerCells = [
       {
@@ -127,13 +207,54 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
       var habitTitle = this.habitTitles[hIdx];
       var habitTiddler = this.wiki.getTiddler(habitTitle);
       var caption = (habitTiddler && habitTiddler.fields.caption) || habitTitle;
+      var unit =
+        habitTiddler && habitTiddler.fields["habit-unit"]
+          ? habitTiddler.fields["habit-unit"].trim()
+          : "";
+      var streak = computeHabitStreak(this.wiki, habitTiddler, streakRefDate);
+
+      var titleRowNodes = [{ type: "text", text: caption }];
+      if (
+        unit &&
+        caption.toLowerCase().indexOf("(" + unit.toLowerCase()) === -1
+      ) {
+        titleRowNodes.push({
+          type: "element",
+          tag: "span",
+          attributes: {
+            class: { type: "string", value: "habit-meta-hint" },
+          },
+          children: [{ type: "text", text: "(" + unit + ")" }],
+        });
+      }
+      if (streak >= 1) {
+        titleRowNodes.push({
+          type: "element",
+          tag: "span",
+          attributes: {
+            class: { type: "string", value: "habit-streak-pill" },
+            title: { type: "string", value: streak + "-day streak" },
+          },
+          children: [{ type: "text", text: "🔥 " + streak + "d" }],
+        });
+      }
+
       headerCells.push({
         type: "element",
         tag: "th",
         attributes: {
           class: { type: "string", value: "journal-summary-th-center" },
         },
-        children: [{ type: "text", text: caption }],
+        children: [
+          {
+            type: "element",
+            tag: "div",
+            attributes: {
+              class: { type: "string", value: "habit-th-title-row" },
+            },
+            children: titleRowNodes,
+          },
+        ],
       });
     }
 
@@ -184,11 +305,13 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
         var hTiddler = this.wiki.getTiddler(hTitle);
         var field = hTiddler && hTiddler.fields["journal-field"];
         var type = (hTiddler && hTiddler.fields["habit-type"]) || "number";
+        var agg = (hTiddler && hTiddler.fields["habit-agg"]) || "sum";
         var content = [];
 
         if (mode === "yearly") {
           var daysInMonth = this.getDaysForMonth(rowTitle);
           var sum = 0;
+          var numEntries = 0;
           var count = 0;
 
           for (var dIdx = 0; dIdx < daysInMonth.length; dIdx++) {
@@ -196,22 +319,42 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
             var val = dTiddler && field ? dTiddler.fields[field] : undefined;
             if (type === "number") {
               var n = parseFloat(val);
-              if (!isNaN(n)) sum += n;
+              if (!isNaN(n)) {
+                sum += n;
+                numEntries++;
+              }
             } else if (type === "checkbox") {
               if (val === "yes") count++;
             }
           }
 
           var cellText = "";
-          if (type === "number") cellText = formatNumericTotal(sum);
+          if (type === "number") {
+            var monthVal =
+              agg === "avg" ? (numEntries > 0 ? sum / numEntries : 0) : sum;
+            cellText = formatNumericTotal(monthVal);
+          }
           if (type === "checkbox") cellText = count.toString();
           content.push({ type: "text", text: cellText });
         } else {
           var value =
             rowTiddler && field ? rowTiddler.fields[field] : undefined;
           if (type === "checkbox") {
-            if (value === "yes") content.push({ type: "text", text: "✅" });
-            else if (value === "no") content.push({ type: "text", text: "❌" });
+            var statusIcon =
+              value === "yes" ? " ✅" : value === "no" ? " ❌" : "";
+            content.push({
+              type: "checkbox",
+              attributes: {
+                tiddler: { type: "string", value: rowTitle },
+                field: { type: "string", value: field },
+                checked: { type: "string", value: "yes" },
+                unchecked: { type: "string", value: "no" },
+                default: { type: "string", value: "no" },
+              },
+              children: statusIcon
+                ? [{ type: "text", text: statusIcon }]
+                : [],
+            });
           } else {
             content.push({
               type: "text",
@@ -247,23 +390,22 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
         attributes: {
           class: { type: "string", value: "journal-summary-totals-td-label" },
         },
-        children: [{ type: "text", text: "TOTALS" }],
+        children: [{ type: "text", text: "TOTALS / AVG" }],
       },
     ];
 
-    var allDaysInPeriod =
-      mode === "yearly"
-        ? this.matchTitle
-          ? this.wiki.filterTiddlers(
-              "[tag[Daily]tag[Journal]tag[" +
-                escapedMatch +
-                "]] [tag[Daily]tag[Journal]year[" +
-                escapedMatch +
-                "]] +[unique[]]",
-              this
-            )
-          : []
-        : this.rowTitles;
+    var goalCells = [
+      {
+        type: "element",
+        tag: "td",
+        attributes: {
+          class: { type: "string", value: "journal-summary-totals-td-label" },
+        },
+        children: [{ type: "text", text: "GOAL / COMPLETION" }],
+      },
+    ];
+
+    var totalDaysCount = allDaysInPeriod.length;
 
     for (var tIdx = 0; tIdx < this.habitTitles.length; tIdx++) {
       var totalHabitTiddler = this.wiki.getTiddler(this.habitTitles[tIdx]);
@@ -272,25 +414,70 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
       var totalType =
         (totalHabitTiddler && totalHabitTiddler.fields["habit-type"]) ||
         "number";
+      var totalAgg =
+        (totalHabitTiddler && totalHabitTiddler.fields["habit-agg"]) || "sum";
 
       var totalSum = 0;
+      var numericLoggedDays = 0;
       var totalCount = 0;
+      var metDays = 0;
 
       for (var pIdx = 0; pIdx < allDaysInPeriod.length; pIdx++) {
-        var dayTiddler = this.wiki.getTiddler(allDaysInPeriod[pIdx]);
+        var dayTitle = allDaysInPeriod[pIdx];
+        var dayTiddler = this.wiki.getTiddler(dayTitle);
         var dayVal =
           dayTiddler && totalField ? dayTiddler.fields[totalField] : undefined;
         if (totalType === "number") {
           var parsedNum = parseFloat(dayVal);
-          if (!isNaN(parsedNum)) totalSum += parsedNum;
+          if (!isNaN(parsedNum)) {
+            totalSum += parsedNum;
+            numericLoggedDays++;
+          }
         } else if (totalType === "checkbox") {
           if (dayVal === "yes") totalCount++;
         }
+        if (isHabitMetOnDay(this.wiki, dayTitle, totalHabitTiddler)) {
+          metDays++;
+        }
       }
 
-      var totalText = "";
-      if (totalType === "number") totalText = formatNumericTotal(totalSum);
-      if (totalType === "checkbox") totalText = totalCount.toString();
+      var totalCellChildren = [];
+      if (totalType === "number") {
+        var displayVal =
+          totalAgg === "avg"
+            ? numericLoggedDays > 0
+              ? totalSum / numericLoggedDays
+              : 0
+            : totalSum;
+        var numStr = formatNumericTotal(displayVal);
+        if (totalAgg === "avg") {
+          totalCellChildren.push({
+            type: "element",
+            tag: "span",
+            children: [{ type: "text", text: numStr }],
+          });
+          totalCellChildren.push({
+            type: "element",
+            tag: "span",
+            attributes: {
+              class: { type: "string", value: "habit-meta-hint" },
+            },
+            children: [{ type: "text", text: " (avg)" }],
+          });
+        } else {
+          totalCellChildren.push({ type: "text", text: numStr });
+        }
+      } else if (totalType === "checkbox") {
+        totalCellChildren.push({
+          type: "text",
+          text: totalCount.toString(),
+        });
+      } else {
+        totalCellChildren.push({
+          type: "text",
+          text: metDays.toString(),
+        });
+      }
 
       totalCells.push({
         type: "element",
@@ -298,7 +485,21 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
         attributes: {
           class: { type: "string", value: "journal-summary-totals-td-value" },
         },
-        children: [{ type: "text", text: totalText }],
+        children: totalCellChildren,
+      });
+
+      var pct =
+        totalDaysCount > 0 ? Math.round((metDays / totalDaysCount) * 100) : 0;
+      var goalText =
+        metDays + "/" + totalDaysCount + " (" + pct + "%)";
+
+      goalCells.push({
+        type: "element",
+        tag: "td",
+        attributes: {
+          class: { type: "string", value: "journal-summary-totals-td-value" },
+        },
+        children: [{ type: "text", text: goalText }],
       });
     }
 
@@ -309,6 +510,15 @@ Renders a summary table of habits across weekly, monthly, or yearly journal peri
         class: { type: "string", value: "journal-summary-totals-tr" },
       },
       children: totalCells,
+    });
+
+    rows.push({
+      type: "element",
+      tag: "tr",
+      attributes: {
+        class: { type: "string", value: "journal-summary-goals-tr" },
+      },
+      children: goalCells,
     });
 
     var tableNode = {

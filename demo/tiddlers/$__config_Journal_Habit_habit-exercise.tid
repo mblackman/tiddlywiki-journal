@@ -4,4 +4,6 @@ caption: Exercise (mins)
 habit-shorthand: Ex
 journal-field: habit-exercise
 habit-type: number
-
+habit-unit: mins
+habit-target: 30
+habit-agg: sum

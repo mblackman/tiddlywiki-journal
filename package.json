@@ -1,6 +1,6 @@
 {
   "name": "tiddlywiki-journal",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Structured daily, weekly, monthly, and yearly journaling and habit tracking for TiddlyWiki",
   "main": "npm run build-all",
   "scripts": {

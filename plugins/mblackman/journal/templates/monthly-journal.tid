@@ -15,13 +15,8 @@ type: text/vnd.tiddlywiki
     yearJournalDate={{{ [<yearTitle>addsuffix[0101120000000]] }}}
   >
     <div class="journal-header-container">
-      <$macrocall $name="journal-parent-btn" target=<<yearTitle>> label=<<yearTitle>> tags="Journal Yearly" tooltip="Open Yearly Review" journalDate=<<yearJournalDate>> />
-      <<journal-grid
-        gridClass:"journal-weeks-grid"
-        filter:"[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]"
-        name:"Week"
-        date:'<$text text={{{ [{!!title}split[W]last[1]] }}}/>'
-      >>
+      <<journal-parent-btn target=<<yearTitle>> label=<<yearTitle>> tags="Journal Yearly" tooltip="Open Yearly Review" journalDate=<<yearJournalDate>> >>
+      <$journal-period-grid mode="monthly-weeks" period=<<matchTitle>> />
     </div>
   </$let>
 """>>
@@ -31,7 +26,7 @@ type: text/vnd.tiddlywiki
 <div class="journal-section">
   <div class="journal-section-tight">
       <span class="journal-label">🏆 What were major highlights and themes of this month?</span>
-      <<journal-quick-add highlights-log "Add a highlight or theme...">>
+      <<journal-quick-add "highlights-log" "Add a highlight or theme...">>
       <$edit-text field="highlights-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
@@ -39,7 +34,7 @@ type: text/vnd.tiddlywiki
 <div class="journal-section">
   <div class="journal-section-tight">
       <span class="journal-label">📉 What were the biggest challenges I overcame?</span>
-      <<journal-quick-add challenges-log "Add a challenge...">>
+      <<journal-quick-add "challenges-log" "Add a challenge...">>
       <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
@@ -47,7 +42,7 @@ type: text/vnd.tiddlywiki
 <div class="journal-section">
   <div class="journal-section-tight">
       <span class="journal-label">🔑 What were key lessons from this month?</span>
-      <<journal-quick-add lessons-log "Add a lesson...">>
+      <<journal-quick-add "lessons-log" "Add a lesson...">>
       <$edit-text field="lessons-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
@@ -57,21 +52,16 @@ type: text/vnd.tiddlywiki
 <div class="journal-section">
   <div class="journal-section-tight">
       <span class="journal-label">What are my top 3 priorities for next month?</span>
-      <<journal-quick-add monthly-priorities "Add a priority...">>
+      <<journal-quick-add "monthly-priorities" "Add a priority...">>
       <$edit-text field="monthly-priorities" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
-<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+<hr class="journal-hr">
 
 <h3>📊 Habits Summary</h3>
 
-<<journal-grid
-  gridClass:"journal-days-grid"
-  filter:"[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]"
-  name:'<$text text={{{ [{!!title}dayjs[ddd]] }}}/>'
-  date:'<$text text={{{ [{!!title}dayjs[DD]] }}}/>'
->>
+<$journal-period-grid mode="monthly-days" period=<<matchTitle>> />
 
 <$habit-summary-table mode="monthly" />
 
@@ -86,23 +76,23 @@ type: text/vnd.tiddlywiki
 <div class="journal-section">
   <$list filter="[tag[Weekly]tag[Journal]tag<matchTitle>sort[title]]">
     <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] [all[current]has[improvement-highlight]] +[limit[1]]" variable="ignore">
-      <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
-        <div style="font-weight: bold; margin-bottom: 6px;">
+      <div class="journal-roll-up-item">
+        <div class="journal-roll-up-header">
           <$link to=<<currentTiddler>>><$text text="Week " /><$text text={{{ [{!!title}split[W]last[1]] }}}/></$link>
         </div>
         <$list filter="[all[current]has[highlight]]">
-          <div style="margin-bottom: 4px; display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">🏆</span> <span>{{!!highlight}}</span>
+          <div class="journal-roll-up-row">
+            <span class="journal-roll-up-icon">🏆</span> <span>{{!!highlight}}</span>
           </div>
         </$list>
         <$list filter="[all[current]has[lowlight]]">
-          <div style="margin-bottom: 4px; display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
+          <div class="journal-roll-up-row">
+            <span class="journal-roll-up-icon">📉</span> <span>{{!!lowlight}}</span>
           </div>
         </$list>
         <$list filter="[all[current]has[improvement-highlight]]">
-          <div style="display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">🚀</span> <span>{{!!improvement-highlight}}</span>
+          <div class="journal-roll-up-row">
+            <span class="journal-roll-up-icon">🚀</span> <span>{{!!improvement-highlight}}</span>
           </div>
         </$list>
       </div>

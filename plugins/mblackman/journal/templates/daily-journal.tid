@@ -3,25 +3,48 @@ type: text/vnd.tiddlywiki
 
 \whitespace trim
 \import [[$:/plugins/mblackman/journal/macros]]
-\define newline()
 
-\end
-
-<$let currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}>
+<$let
+  currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
+  storyOrCurrent=<<currentTiddler>>
+  weekTitle={{{ [{!!week}!is[blank]] ~[<currentTiddler>dayjs[iso-week]] }}}
+  prevWeekTitle={{{ [<currentTiddler>dayjs:shift[-1,week,iso-week]] }}}
+  monthTag={{{ [{!!month}!is[blank]] ~[<currentTiddler>dayjs[YYYY-MM]] }}}
+  prevMonthTag={{{ [<currentTiddler>dayjs:shift[-1,month,YYYY-MM]] }}}
+  yearTag={{{ [{!!year}!is[blank]] ~[<currentTiddler>dayjs[YYYY]] }}}
+  weekJournalDate={{{ [{!!journal-date}!is[blank]] ~[<currentTiddler>dayjs[YYYYMMDD120000000]] }}}
+  dayCompact={{{ [<currentTiddler>dayjs[YYYYMMDD]] }}}
+  tags={{{ [[Journal]] [[Weekly]] [<monthTag>] [<yearTag>] +[join[ ]] }}}
+  activeWeekFocus={{{ [<weekTitle>get[improvement-highlight]!is[blank]] ~[<prevWeekTitle>get[improvement-highlight]!is[blank]] }}}
+  activeWeekSource={{{ [<weekTitle>get[improvement-highlight]!is[blank]then<weekTitle>] ~[<prevWeekTitle>get[improvement-highlight]!is[blank]then<prevWeekTitle>] }}}
+  activeMonthPriorities={{{ [<monthTag>get[monthly-priorities]!is[blank]] ~[<prevMonthTag>get[monthly-priorities]!is[blank]] }}}
+  activeMonthSource={{{ [<monthTag>get[monthly-priorities]!is[blank]then<monthTag>] ~[<prevMonthTag>get[monthly-priorities]!is[blank]then<prevMonthTag>] }}}
+  onThisDayTitles={{{ [<currentTiddler>onthisday[]] }}}
+  activityTiddlers={{{ [all[tiddlers]!is[system]!tag[Journal]sameday:created<weekJournalDate>] [all[tiddlers]!is[system]!tag[Journal]sameday:modified<weekJournalDate>] [<currentTiddler>backlinks[]!is[system]!tag[Journal]] [<currentTiddler>tagging[]!is[system]!tag[Journal]] +[unique[]sort[title]] }}}
+>
 
 <<journal-nav "Daily" """
-  <$let
-    weekTitle={{{ [{!!week}!is[blank]] ~[<currentTiddler>dayjs[iso-week]] }}}
-    monthTag={{{ [{!!month}!is[blank]] ~[<currentTiddler>dayjs[YYYY-MM]] }}}
-    yearTag={{{ [{!!year}!is[blank]] ~[<currentTiddler>dayjs[YYYY]] }}}
-    weekJournalDate={{{ [{!!journal-date}!is[blank]] ~[<currentTiddler>dayjs[YYYYMMDD120000000]] }}}
-    tags={{{ [[Journal]] [[Weekly]] [<monthTag>] [<yearTag>] +[join[ ]] }}}
-  >
-    <div class="journal-header-container">
-      <$macrocall $name="journal-parent-btn" target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" year=<<yearTag>> month=<<monthTag>> journalDate=<<weekJournalDate>> />
-    </div>
-  </$let>
+  <div class="journal-header-container">
+    <<journal-parent-btn target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" year=<<yearTag>> month=<<monthTag>> journalDate=<<weekJournalDate>> >>
+  </div>
 """>>
+
+<$list filter="[<activeWeekFocus>!is[blank]] [<activeMonthPriorities>!is[blank]] +[limit[1]]" variable="ignore">
+  <div class="journal-focus-banner">
+    <$list filter="[<activeWeekFocus>!is[blank]]" variable="ignore">
+      <div class="journal-focus-row">
+        <span class="journal-focus-label">🎯 Weekly Focus (<$link to=<<activeWeekSource>>><$text text=<<activeWeekSource>>/></$link>):</span>
+        <span class="journal-focus-text"><$text text=<<activeWeekFocus>>/></span>
+      </div>
+    </$list>
+    <$list filter="[<activeMonthPriorities>!is[blank]]" variable="ignore">
+      <div class="journal-focus-row">
+        <span class="journal-focus-label">🧭 Monthly Priorities (<$link to=<<activeMonthSource>>><$text text=<<activeMonthSource>>/></$link>):</span>
+        <div class="journal-focus-text"><$transclude $tiddler=<<activeMonthSource>> $field="monthly-priorities" $mode="block"/></div>
+      </div>
+    </$list>
+  </div>
+</$list>
 
 <h3>✅ Habits & Logs</h3>
 <div class="journal-habits-container">
@@ -42,14 +65,14 @@ type: text/vnd.tiddlywiki
   </div>
   <div>
       <span class="journal-sublabel">Detailed Wins (Quick Add or Edit Below)</span>
-      <<journal-quick-add wins-log "Type a win and hit Add...">>
+      <<journal-quick-add "wins-log" "Type a win and hit Add...">>
       <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
   </div>
 </div>
 
 <div class="journal-section">
   <span class="journal-label">🙏 Gratitude List</span>
-  <<journal-quick-add gratitude-log "I am grateful for...">>
+  <<journal-quick-add "gratitude-log" "I am grateful for...">>
   <$edit-text field="gratitude-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
 </div>
 
@@ -60,11 +83,73 @@ type: text/vnd.tiddlywiki
   </div>
   <div>
       <span class="journal-sublabel">Detailed Challenges (Quick Add or Edit Below)</span>
-      <<journal-quick-add challenges-log "Type a challenge and hit Add...">>
+      <<journal-quick-add "challenges-log" "Type a challenge and hit Add...">>
       <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
   </div>
 </div>
 
-<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+<$list filter="[(onThisDayTitles)!is[blank]limit[1]]" variable="ignore">
+  <hr class="journal-hr">
+  <h3>🕰️ On This Day</h3>
+  <div class="journal-on-this-day-list">
+    <$list filter="[(onThisDayTitles)]" variable="otdTiddler">
+      <$tiddler tiddler=<<otdTiddler>>>
+        <$let otdBadge={{{ [<otdTiddler>onthisday:label<storyOrCurrent>] }}}>
+          <div class="journal-otd-card">
+            <div class="journal-otd-header">
+              <div class="journal-otd-title-group">
+                <span class="journal-otd-badge"><$text text=<<otdBadge>>/></span>
+                <$link to=<<otdTiddler>>><strong><$text text={{{ [<otdTiddler>dayjs[ddd, DD MMM YYYY]] }}}/></strong></$link>
+              </div>
+              <div class="journal-day-card-habits">
+                <$habit-dots />
+              </div>
+            </div>
+            <$list filter="[all[current]has[highlight]]">
+              <div class="journal-roll-up-row">
+                <span class="journal-roll-up-icon">🏆</span>
+                <span>{{!!highlight}}</span>
+              </div>
+            </$list>
+            <$list filter="[all[current]has[lowlight]]">
+              <div class="journal-roll-up-row">
+                <span class="journal-roll-up-icon">📉</span>
+                <span>{{!!lowlight}}</span>
+              </div>
+            </$list>
+          </div>
+        </$let>
+      </$tiddler>
+    </$list>
+  </div>
+</$list>
+
+<$list filter="[(activityTiddlers)!is[blank]limit[1]]" variable="ignore">
+  <hr class="journal-hr">
+  <h3>🗂️ Wiki Activity & Mentions</h3>
+  <div class="journal-activity-list">
+    <$list filter="[(activityTiddlers)]" variable="actTiddler">
+      <div class="journal-activity-item">
+        <$link to=<<actTiddler>>><$text text=<<actTiddler>>/></$link>
+        <div class="journal-activity-badges">
+          <$list filter="[<storyOrCurrent>backlinks[]match<actTiddler>]" variable="ignore">
+            <span class="journal-activity-badge">Mentioned</span>
+          </$list>
+          <$list filter="[<storyOrCurrent>tagging[]match<actTiddler>]" variable="ignore">
+            <span class="journal-activity-badge">Tagged</span>
+          </$list>
+          <$list filter="[<actTiddler>sameday:created<weekJournalDate>]" variable="ignore">
+            <span class="journal-activity-badge">Created</span>
+          </$list>
+          <$list filter="[<actTiddler>sameday:modified<weekJournalDate>]" variable="ignore">
+            <span class="journal-activity-badge">Modified</span>
+          </$list>
+        </div>
+      </div>
+    </$list>
+  </div>
+</$list>
+
+<hr class="journal-hr">
 
 </$let>

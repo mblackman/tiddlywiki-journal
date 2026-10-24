@@ -5,18 +5,20 @@ type: text/vnd.tiddlywiki
 
 [[GitHub Repository|https://github.com/mblackman/tiddlywiki-journal]] · [[Live Demo|https://mblackman.github.io/tiddlywiki-journal/]]
 
-Structured daily, weekly, monthly, and yearly journaling and habit tracking for TiddlyWiki. Log daily activities, habits, wins, challenges, and gratitude in a structured format that automatically rolls up into weekly, monthly, and annual review views.
+Structured daily, weekly, monthly, and yearly journaling and habit tracking for TiddlyWiki `>=5.4.0`. Log daily activities, habits, wins, challenges, and gratitude in a structured format that automatically rolls up into weekly, monthly, and annual review views.
 
 !! Features
 
-* ''Structured Entries'': Dedicated templates for Daily (`YYYY-MM-DD`), Weekly (`GGGG-[W]WW`), Monthly (`YYYY-MM`), and Yearly (`YYYY`) journal entries.
-* ''Configurable Habit Tracking'': Track numeric, checkbox, and text habits per day with visual habit dots on calendar grids and automatic summary tables across weeks, months, and years.
-* ''Hierarchical Roll-Ups'': Daily highlights, wins, gratitude lists, and challenges automatically roll up into Weekly, Monthly, and Yearly reviews.
-* ''Quick Access'': Includes a ''Journal'' sidebar tab, a page controls toolbar button, and a ''Journal Dashboard'' (`$:/plugins/mblackman/journal/dashboard`) with 1-click tiles for Today, Week, Month, Year, date jumping, and recent entries.
-* ''Built-in Day.js Engine'': Includes Day.js (with `isoWeek` and `advancedFormat`) out of the box via both the `<<dayjs>>` macro and `[dayjs[...]]` filter operator — no external date plugin required.
+* ''Structured Entries & Complete Period Grids'': Dedicated templates for Daily (`YYYY-MM-DD`), Weekly (`GGGG-[W]WW`), Monthly (`YYYY-MM`), and Yearly (`YYYY`) journal entries with full `Mon–Sun` and `Jan–Dec` period grids and clickable "Ghost Cards" for uncreated dates.
+* ''Next-Gen Habit Engine'': Track numeric, checkbox, and text habits with configurable units (`habit-unit`), daily targets (`habit-target`), `sum` vs `avg` roll-ups (`habit-agg`), two-state progress dots (`.habit-dot` vs `.habit-dot-partial`), live `🔥 Xd` streak pills, interactive review checkboxes, and a 2-row `TOTALS / AVG` + `GOAL / COMPLETION` summary footer.
+* ''Top-Down Focus Banner'': Daily entries automatically surface your active Weekly Focus (`improvement-highlight`) and Monthly Priorities (`monthly-priorities`).
+* ''"On This Day" Memory Resurfacing'': Automatically resurfaces past entries from 1 Week Ago, 1 Month Ago, and prior years on the same date (`[onthisday[]]`).
+* ''Automatic Daily Wiki Activity & Mentions'': Daily entries list non-journal notes created, modified, tagged, or mentioning that date.
+* ''Interactive Dashboard Calendar & Serendipity'': Includes a ''Journal'' sidebar tab, a page controls toolbar button, and a ''Journal Dashboard'' (`$:/plugins/mblackman/journal/dashboard`) with 1-click tiles for Today, Week, Month, Year, an interactive monthly calendar (`<$journal-calendar />`), and a ''🎲 Random Past Entry'' button.
+* ''Built-in Day.js Engine'': Includes Day.js (with `isoWeek` and `advancedFormat`) out of the box via the `<<dayjs>>` macro and `[dayjs[...]]` / `[dayjs:shift[...]]` filter operators — no external date plugin required.
 * ''Media Integration'': Optional integration with [[Media Importer|$:/plugins/mblackman/media-importer]] (`https://github.com/mblackman/tiddlywiki-media-importer`) for logging daily media consumption.
 
 !! Date Formatting Helpers
 
-* ''Filter Operator'': `{{{ [[2026-10-23]dayjs[GGGG-[W]WW]] }}}` or `{{{ [[now]dayjs[YYYY-MM-DD]] }}}`
+* ''Filter Operator'': `{{{ [[2026-10-23]dayjs[GGGG-{W}WW]] }}}`, `{{{ [[2026-10-23]dayjs:shift[-1,week,iso-week]] }}}`, or `{{{ [[now]dayjs[YYYY-MM-DD]] }}}`
 * ''Macro'': `<<dayjs "2026-10-23" "GGGG-[W]WW">>` (defaults to today and `YYYY-MM-DD` when omitted)

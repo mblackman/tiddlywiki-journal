@@ -2,11 +2,6 @@ title: $:/plugins/mblackman/journal/dashboard
 caption: Journal Dashboard
 type: text/vnd.tiddlywiki
 
-\define dailyTags() Journal Daily $(weekTag)$ $(monthTag)$ $(yearTag)$
-\define weeklyTags() Journal Weekly $(monthTag)$ $(yearTag)$
-\define monthlyTags() Journal Monthly $(yearTag)$
-\define yearlyTags() Journal Yearly
-
 <$let
   titleDay={{{ [[now]dayjs[YYYY-MM-DD]] }}}
   weekTag={{{ [[now]dayjs[iso-week]] }}}
@@ -18,6 +13,10 @@ type: text/vnd.tiddlywiki
   dayJournalDate={{{ [[now]dayjs[YYYYMMDD120000000]] }}}
   monthJournalDate={{{ [[now]dayjs[YYYYMM01120000000]] }}}
   yearJournalDate={{{ [[now]dayjs[YYYY0101120000000]] }}}
+  dailyTags={{{ [[Journal]] [[Daily]] [<weekTag>] [<monthTag>] [<yearTag>] +[join[ ]] }}}
+  weeklyTags={{{ [[Journal]] [[Weekly]] [<monthTag>] [<yearTag>] +[join[ ]] }}}
+  monthlyTags={{{ [[Journal]] [[Monthly]] [<yearTag>] +[join[ ]] }}}
+  yearlyTags="Journal Yearly"
 >
 
 <div class="journal-dashboard">
@@ -56,34 +55,23 @@ type: text/vnd.tiddlywiki
 
 <div class="journal-history-section">
 
-  <div class="journal-history-header">Jump to Date</div>
+  <div class="journal-history-header">Calendar</div>
 
-  <div class="journal-date-jumper">
-    <$edit-text tiddler="$:/temp/journal-jump" tag="input" type="date" class="journal-input" default="" />
+  <$journal-calendar />
 
-    <$let targetDate={{{ [{$:/temp/journal-jump}trim[]] }}}>
-      <% if [<targetDate>!is[blank]] %>
-        <$button class="journal-btn journal-btn-primary" tooltip={{{ [[Open or create ]addsuffix<targetDate>] }}}>
-          <$let
-            yearTag={{{ [<targetDate>dayjs[YYYY]] }}}
-            monthTag={{{ [<targetDate>dayjs[YYYY-MM]] }}}
-            weekTag={{{ [<targetDate>dayjs[iso-week]] }}}
-            targetJournalDate={{{ [<targetDate>dayjs[YYYYMMDD120000000]] }}}
-          >
-            <$list filter="[<targetDate>!is[tiddler]]" variable="none">
-              <$action-setfield $tiddler=<<targetDate>> tags=<<dailyTags>> journal-date=<<targetJournalDate>> year=<<yearTag>> month=<<monthTag>> week=<<weekTag>> />
-            </$list>
-            <$action-navigate $to=<<targetDate>> />
-          </$let>
-          GO
-        </$button>
-      <% else %>
-        <span class="journal-btn journal-btn-disabled" title="Select a date above">GO</span>
-      <% endif %>
-    </$let>
+  <div class="journal-history-header-row">
+    <div class="journal-history-header">Recent Entries</div>
+    <$list filter="[tag[Journal]tag[Daily]!match<titleDay>limit[1]] [tag[Journal]tag[Daily]limit[1]] +[limit[1]]" variable="ignore">
+      <$button class="tc-btn-invisible journal-btn journal-btn-sm" tooltip="Open a random past daily journal entry">
+        <$let randomEntry={{{ [tag[Journal]tag[Daily]!match<titleDay>journal-random[]] ~[tag[Journal]tag[Daily]journal-random[]] }}}>
+          <$list filter="[<randomEntry>!is[blank]]" variable="ignore">
+            <$action-navigate $to=<<randomEntry>> />
+          </$list>
+        </$let>
+        🎲 Random Past Entry
+      </$button>
+    </$list>
   </div>
-
-  <div class="journal-history-header">Recent Entries</div>
 
   <div class="journal-recent-list">
     <$list filter="[tag[Journal]tag[Daily]!sort[title]limit[5]]" emptyMessage="<div class='journal-empty-hint'>No daily entries yet. Click Today above to start!</div>">

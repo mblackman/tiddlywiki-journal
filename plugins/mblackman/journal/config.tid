@@ -9,7 +9,7 @@ Manage your journal and habit tracking within TiddlyWiki.
 
 !! Habits
 
-Configure the daily habits you want to track.
+Configure the daily habits you want to track. Set an optional daily ''Target'' for numeric habits to enable two-state progress dots and goal completion percentages.
 
 <table class="journal-config-table">
   <thead>
@@ -18,6 +18,9 @@ Configure the daily habits you want to track.
       <th>Shorthand</th>
       <th>Field Name</th>
       <th>Type</th>
+      <th>Unit</th>
+      <th>Target</th>
+      <th>Roll-up</th>
       <th></th>
     </tr>
   </thead>
@@ -50,6 +53,18 @@ Configure the daily habits you want to track.
           </$select>
         </td>
         <td>
+          <$edit-text field="habit-unit" class="tc-edit-texteditor" size="5" placeholder="min, p..." />
+        </td>
+        <td>
+          <$edit-text field="habit-target" class="tc-edit-texteditor" size="4" placeholder="e.g. 30" />
+        </td>
+        <td>
+          <$select field="habit-agg" default="sum" class="tc-edit-texteditor">
+            <option value="sum">Sum</option>
+            <option value="avg">Average</option>
+          </$select>
+        </td>
+        <td>
           <$button class="tc-btn-invisible tc-btn-icon" tooltip="Delete Habit">
             <$action-deletetiddler $tiddler=<<currentTiddler>> />
             {{$:/core/images/delete-button}}
@@ -68,12 +83,23 @@ Configure the daily habits you want to track.
           <option value="text">Text</option>
         </$select>
       </td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-unit" placeholder="min" class="tc-edit-texteditor" size="5" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-target" placeholder="30" class="tc-edit-texteditor" size="4" /></td>
+      <td>
+        <$select tiddler="$:/temp/journal/new-habit" field="habit-agg" default="sum" class="tc-edit-texteditor">
+          <option value="sum">Sum</option>
+          <option value="avg">Average</option>
+        </$select>
+      </td>
       <td>
         <$button class="journal-btn journal-btn-primary">
           <$let
             rawCaption={{{ [{$:/temp/journal/new-habit!!caption}trim[]] }}}
             rawShorthand={{{ [{$:/temp/journal/new-habit!!habit-shorthand}trim[]] }}}
             rawField={{{ [{$:/temp/journal/new-habit!!journal-field}trim[]] }}}
+            rawUnit={{{ [{$:/temp/journal/new-habit!!habit-unit}trim[]] }}}
+            rawTarget={{{ [{$:/temp/journal/new-habit!!habit-target}trim[]] }}}
+            rawAgg={{{ [[$:/temp/journal/new-habit]get[habit-agg]else[sum]] }}}
             autoField={{{ [<rawCaption>lowercase[]search-replace:g:regexp[^a-z0-9]+,[-]trim[-]addprefix[habit-]] }}}
             finalField={{{ [<rawField>!is[blank]else<autoField>] }}}
             finalShorthand={{{ [<rawShorthand>!is[blank]] ~[<rawCaption>split[]first[2]join[]] }}}
@@ -87,8 +113,11 @@ Configure the daily habits you want to track.
                 habit-shorthand=<<finalShorthand>>
                 journal-field=<<finalField>>
                 habit-type={{{ [[$:/temp/journal/new-habit]get[habit-type]else[number]] }}}
+                habit-unit=<<rawUnit>>
+                habit-target=<<rawTarget>>
+                habit-agg=<<rawAgg>>
               />
-              <$action-setfield $tiddler="$:/temp/journal/new-habit" caption="" habit-shorthand="" journal-field="" habit-type="number" />
+              <$action-setfield $tiddler="$:/temp/journal/new-habit" caption="" habit-shorthand="" journal-field="" habit-type="number" habit-unit="" habit-target="" habit-agg="sum" />
             </$list>
           </$let>
           Add

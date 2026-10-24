@@ -4,4 +4,6 @@ caption: Reading (pages)
 habit-shorthand: Rd
 journal-field: habit-reading
 habit-type: number
-
+habit-unit: pages
+habit-target: 30
+habit-agg: sum

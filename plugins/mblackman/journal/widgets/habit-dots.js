@@ -3,7 +3,10 @@ title: $:/plugins/mblackman/journal/widgets/habit-dots.js
 type: application/javascript
 module-type: widget
 
-Renders shorthand habit indicator badges for a daily journal tiddler
+Renders shorthand habit indicator badges for a daily journal tiddler.
+Supports two-state badges when a numeric habit has a configured `habit-target` (>0):
+- `.habit-dot` (solid) when `value >= target` (or when no target is configured and `value > 0`)
+- `.habit-dot.habit-dot-partial` (outline/dashed) when `0 < value < target`
 \*/
 
 (function () {
@@ -47,18 +50,37 @@ Renders shorthand habit indicator badges for a daily journal tiddler
       var shorthand = (habitTiddler.fields["habit-shorthand"] || "").trim();
       var type = habitTiddler.fields["habit-type"] || "number";
       var caption = habitTiddler.fields.caption || habitTitle;
+      var unit = (habitTiddler.fields["habit-unit"] || "").trim();
+      var target = parseFloat(habitTiddler.fields["habit-target"]);
 
       if (!field || !shorthand) continue;
 
       var value = currentTiddler ? currentTiddler.fields[field] : undefined;
       var showDot = false;
+      var isPartial = false;
+      var tooltip = caption;
 
       if (type === "checkbox") {
         if (value === "yes") showDot = true;
       } else if (type === "number") {
-        if (value && value !== "0") showDot = true;
+        var numVal = parseFloat(value);
+        if (!isNaN(numVal) && numVal > 0) {
+          showDot = true;
+          var unitSuffix = unit ? " " + unit : "";
+          if (!isNaN(target) && target > 0) {
+            if (numVal < target) {
+              isPartial = true;
+            }
+            tooltip = caption + ": " + numVal + " / " + target + unitSuffix;
+          } else {
+            tooltip = caption + ": " + numVal + unitSuffix;
+          }
+        }
       } else {
-        if (value) showDot = true;
+        if (value && String(value).trim() !== "") {
+          showDot = true;
+          tooltip = caption + ": " + String(value);
+        }
       }
 
       if (showDot) {
@@ -66,8 +88,11 @@ Renders shorthand habit indicator badges for a daily journal tiddler
           type: "element",
           tag: "span",
           attributes: {
-            class: { type: "string", value: "habit-dot" },
-            title: { type: "string", value: caption },
+            class: {
+              type: "string",
+              value: isPartial ? "habit-dot habit-dot-partial" : "habit-dot",
+            },
+            title: { type: "string", value: tooltip },
           },
           children: [{ type: "text", text: shorthand }],
         });

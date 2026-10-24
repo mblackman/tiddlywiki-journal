@@ -11,21 +11,16 @@ type: text/vnd.tiddlywiki
 
 <<journal-nav "Weekly" """
   <$let
-    monthTitle={{{ [{!!month}!is[blank]] ~[tag[Daily]tag[Journal]tag<matchTitle>sort[title]first[]get[month]] }}}
+    monthTitle={{{ [{!!month}!is[blank]] ~[tag[Daily]tag[Journal]tag<matchTitle>sort[title]first[]get[month]] ~[<matchTitle>dayjs[YYYY-MM]] }}}
     yearTag={{{ [{!!year}!is[blank]] ~[<monthTitle>split[-]first[]] ~[<matchTitle>split[-W]first[]] }}}
     monthJournalDate={{{ [<monthTitle>split[-]join[]addsuffix[01120000000]] }}}
     tags={{{ [[Journal]] [[Monthly]] [<yearTag>] +[join[ ]] }}}
   >
     <div class="journal-header-container">
       <$list filter="[<monthTitle>!is[blank]]" variable="ignore">
-        <$macrocall $name="journal-parent-btn" target=<<monthTitle>> label=<<monthTitle>> tags=<<tags>> tooltip="Open Monthly Review" year=<<yearTag>> journalDate=<<monthJournalDate>> />
+        <<journal-parent-btn target=<<monthTitle>> label=<<monthTitle>> tags=<<tags>> tooltip="Open Monthly Review" year=<<yearTag>> journalDate=<<monthJournalDate>> >>
       </$list>
-      <<journal-grid
-        gridClass:"journal-days-grid"
-        filter:"[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]"
-        name:'<$text text={{{ [{!!title}dayjs[ddd]] }}}/>'
-        date:'<$text text={{{ [{!!title}dayjs[DD]] }}}/>'
-      >>
+      <$journal-period-grid mode="weekly" period=<<matchTitle>> />
     </div>
   </$let>
 """>>
@@ -39,7 +34,7 @@ type: text/vnd.tiddlywiki
   </div>
   <div>
       <span class="journal-sublabel">Detailed Wins</span>
-      <<journal-quick-add wins-log "Add a win...">>
+      <<journal-quick-add "wins-log" "Add a win...">>
       <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
@@ -51,7 +46,7 @@ type: text/vnd.tiddlywiki
   </div>
   <div>
       <span class="journal-sublabel">Detailed Challenges</span>
-      <<journal-quick-add challenges-log "Add a challenge...">>
+      <<journal-quick-add "challenges-log" "Add a challenge...">>
       <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
@@ -63,12 +58,12 @@ type: text/vnd.tiddlywiki
   </div>
   <div>
       <span class="journal-sublabel">Detailed Improvements</span>
-      <<journal-quick-add improvements-log "Add an improvement...">>
+      <<journal-quick-add "improvements-log" "Add an improvement...">>
       <$edit-text field="improvements-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="..." />
   </div>
 </div>
 
-<hr style="border: 0; border-top: 1px solid <<colour table-border>>;">
+<hr class="journal-hr">
 
 <h3>📊 Habits Summary</h3>
 
@@ -85,18 +80,18 @@ type: text/vnd.tiddlywiki
 <div class="journal-section">
   <$list filter="[tag[Daily]tag[Journal]tag<matchTitle>sort[title]]">
     <$list filter="[all[current]has[highlight]] [all[current]has[lowlight]] +[limit[1]]" variable="ignore">
-      <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed <<colour table-border>>;">
-        <div style="font-weight: bold; margin-bottom: 6px;">
+      <div class="journal-roll-up-item">
+        <div class="journal-roll-up-header">
           <$link to=<<currentTiddler>>><$text text={{{ [{!!title}dayjs[dddd, DD MMM]] }}}/></$link>
         </div>
         <$list filter="[all[current]has[highlight]]">
-          <div style="margin-bottom: 4px; display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">🏆</span> <span>{{!!highlight}}</span>
+          <div class="journal-roll-up-row">
+            <span class="journal-roll-up-icon">🏆</span> <span>{{!!highlight}}</span>
           </div>
         </$list>
         <$list filter="[all[current]has[lowlight]]">
-          <div style="display: flex; gap: 8px;">
-            <span style="flex-shrink: 0;">📉</span> <span>{{!!lowlight}}</span>
+          <div class="journal-roll-up-row">
+            <span class="journal-roll-up-icon">📉</span> <span>{{!!lowlight}}</span>
           </div>
         </$list>
       </div>
