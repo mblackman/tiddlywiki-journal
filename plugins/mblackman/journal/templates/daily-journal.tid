@@ -7,6 +7,7 @@ type: text/vnd.tiddlywiki
 <$let
   currentTiddler={{{ [<storyTiddler>!is[blank]else<currentTiddler>] }}}
   storyOrCurrent=<<currentTiddler>>
+  prettyDate={{{ [<currentTiddler>dayjs[dddd, MMMM D, YYYY]] }}}
   weekTitle={{{ [{!!week}!is[blank]] ~[<currentTiddler>dayjs[iso-week]] }}}
   prevWeekTitle={{{ [<currentTiddler>dayjs:shift[-1,week,iso-week]] }}}
   monthTag={{{ [{!!month}!is[blank]] ~[<currentTiddler>dayjs[YYYY-MM]] }}}
@@ -23,30 +24,36 @@ type: text/vnd.tiddlywiki
   activityTiddlers={{{ [all[tiddlers]!is[system]!tag[Journal]sameday:created<weekJournalDate>] [all[tiddlers]!is[system]!tag[Journal]sameday:modified<weekJournalDate>] [<currentTiddler>backlinks[]!is[system]!tag[Journal]] [<currentTiddler>tagging[]!is[system]!tag[Journal]] +[unique[]sort[title]] }}}
 >
 
+<div class="journal-entry-container">
+
+<$list filter="[<prettyDate>!is[blank]]" variable="ignore">
+  <div class="journal-editorial-subtitle"><$text text=<<prettyDate>>/></div>
+</$list>
+
 <<journal-nav "Daily" """
-  <div class="journal-header-container">
-    <<journal-parent-btn target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" year=<<yearTag>> month=<<monthTag>> journalDate=<<weekJournalDate>> >>
-  </div>
+  <<journal-parent-btn target=<<weekTitle>> label=<<weekTitle>> tags=<<tags>> tooltip="Open Weekly Review" year=<<yearTag>> month=<<monthTag>> journalDate=<<weekJournalDate>> >>
+""" """
+  <$journal-period-grid mode="weekly" period=<<weekTitle>> active=<<currentTiddler>> />
 """>>
 
 <$list filter="[<activeWeekFocus>!is[blank]] [<activeMonthPriorities>!is[blank]] +[limit[1]]" variable="ignore">
   <div class="journal-focus-banner">
     <$list filter="[<activeWeekFocus>!is[blank]]" variable="ignore">
       <div class="journal-focus-row">
-        <span class="journal-focus-label">🎯 Weekly Focus (<$link to=<<activeWeekSource>>><$text text=<<activeWeekSource>>/></$link>):</span>
+        <span class="journal-focus-label">Weekly Focus (<$link to=<<activeWeekSource>>><$text text=<<activeWeekSource>>/></$link>):</span>
         <span class="journal-focus-text"><$text text=<<activeWeekFocus>>/></span>
       </div>
     </$list>
     <$list filter="[<activeMonthPriorities>!is[blank]]" variable="ignore">
       <div class="journal-focus-row">
-        <span class="journal-focus-label">🧭 Monthly Priorities (<$link to=<<activeMonthSource>>><$text text=<<activeMonthSource>>/></$link>):</span>
+        <span class="journal-focus-label">Monthly Priorities (<$link to=<<activeMonthSource>>><$text text=<<activeMonthSource>>/></$link>):</span>
         <div class="journal-focus-text"><$transclude $tiddler=<<activeMonthSource>> $field="monthly-priorities" $mode="block"/></div>
       </div>
     </$list>
   </div>
 </$list>
 
-<h3>✅ Habits & Logs</h3>
+<h3 class="journal-section-heading">Habits & Logs</h3>
 <div class="journal-habits-container">
   <$journal-habits />
   <$list filter="[[$:/config/Journal/EnableMedia]get[text]else[yes]!match[no]] :filter[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore">
@@ -56,41 +63,31 @@ type: text/vnd.tiddlywiki
   </$list>
 </div>
 
-<h3>✨ Reflection</h3>
+<h3 class="journal-section-heading">Reflection</h3>
 
-<div class="journal-section">
+<div class="journal-section journal-card-panel">
   <div class="journal-section-tight">
-      <span class="journal-label">🏆 Big Win</span>
-      <$edit-text field="highlight" class="tc-edit-texteditor journal-input" placeholder="One sentence summary for roll-ups..." />
+    <span class="journal-label">Big Win</span>
+    <$edit-text field="highlight" class="tc-edit-texteditor journal-input" placeholder="One sentence summary for roll-ups..." />
   </div>
-  <div>
-      <span class="journal-sublabel">Detailed Wins (Quick Add or Edit Below)</span>
-      <<journal-quick-add "wins-log" "Type a win and hit Add...">>
-      <$edit-text field="wins-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
-  </div>
+  <$transclude $variable="journal-log-section" field="wins-log" label="" placeholder="Type a win and hit Enter..." sublabel="Detailed Wins" />
 </div>
 
-<div class="journal-section">
-  <span class="journal-label">🙏 Gratitude List</span>
-  <<journal-quick-add "gratitude-log" "I am grateful for...">>
-  <$edit-text field="gratitude-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
+<div class="journal-section journal-card-panel">
+  <$transclude $variable="journal-log-section" field="gratitude-log" label="Gratitude List" placeholder="I am grateful for..." sublabel="" />
 </div>
 
-<div class="journal-section">
+<div class="journal-section journal-card-panel">
   <div class="journal-section-tight">
-      <span class="journal-label">📉 Main Challenge</span>
-      <$edit-text field="lowlight" class="tc-edit-texteditor journal-input" placeholder="One sentence summary..." />
+    <span class="journal-label">Main Challenge</span>
+    <$edit-text field="lowlight" class="tc-edit-texteditor journal-input" placeholder="One sentence summary..." />
   </div>
-  <div>
-      <span class="journal-sublabel">Detailed Challenges (Quick Add or Edit Below)</span>
-      <<journal-quick-add "challenges-log" "Type a challenge and hit Add...">>
-      <$edit-text field="challenges-log" class="tc-edit-texteditor journal-input" tag="textarea" min-height="80px" placeholder="Your list will appear here..." />
-  </div>
+  <$transclude $variable="journal-log-section" field="challenges-log" label="" placeholder="Type a challenge and hit Enter..." sublabel="Detailed Challenges" />
 </div>
 
 <$list filter="[(onThisDayTitles)!is[blank]limit[1]]" variable="ignore">
   <hr class="journal-hr">
-  <h3>🕰️ On This Day</h3>
+  <h3 class="journal-section-heading">On This Day</h3>
   <div class="journal-on-this-day-list">
     <$list filter="[(onThisDayTitles)]" variable="otdTiddler">
       <$tiddler tiddler=<<otdTiddler>>>
@@ -107,13 +104,13 @@ type: text/vnd.tiddlywiki
             </div>
             <$list filter="[all[current]has[highlight]]">
               <div class="journal-roll-up-row">
-                <span class="journal-roll-up-icon">🏆</span>
+                <span class="journal-roll-up-tag journal-roll-up-tag-win">Win</span>
                 <span>{{!!highlight}}</span>
               </div>
             </$list>
             <$list filter="[all[current]has[lowlight]]">
               <div class="journal-roll-up-row">
-                <span class="journal-roll-up-icon">📉</span>
+                <span class="journal-roll-up-tag journal-roll-up-tag-challenge">Challenge</span>
                 <span>{{!!lowlight}}</span>
               </div>
             </$list>
@@ -126,7 +123,7 @@ type: text/vnd.tiddlywiki
 
 <$list filter="[(activityTiddlers)!is[blank]limit[1]]" variable="ignore">
   <hr class="journal-hr">
-  <h3>🗂️ Wiki Activity & Mentions</h3>
+  <h3 class="journal-section-heading">Wiki Activity & Mentions</h3>
   <div class="journal-activity-list">
     <$list filter="[(activityTiddlers)]" variable="actTiddler">
       <div class="journal-activity-item">
@@ -152,4 +149,13 @@ type: text/vnd.tiddlywiki
 
 <hr class="journal-hr">
 
+<div class="journal-notes-header-block">
+  <div class="journal-notes-title-row">
+    <h3 class="journal-section-heading journal-no-margin">Daily Notes</h3>
+    <span class="journal-sublabel journal-no-margin">General notes & stream of thought</span>
+  </div>
+  <$transclude $variable="journal-quick-thought" targetDate=<<currentTiddler>> placeholder="Jot a timestamped note to the bottom of this entry..." />
+</div>
+
+</div>
 </$let>

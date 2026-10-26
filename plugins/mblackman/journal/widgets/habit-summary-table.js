@@ -350,9 +350,22 @@ Features:
                 checked: { type: "string", value: "yes" },
                 unchecked: { type: "string", value: "no" },
                 default: { type: "string", value: "no" },
+                class: { type: "string", value: "habit-summary-checkbox" },
               },
               children: statusIcon
-                ? [{ type: "text", text: statusIcon }]
+                ? [
+                    {
+                      type: "element",
+                      tag: "span",
+                      attributes: {
+                        class: {
+                          type: "string",
+                          value: "habit-summary-status-icon",
+                        },
+                      },
+                      children: [{ type: "text", text: statusIcon }],
+                    },
+                  ]
                 : [],
             });
           } else {
@@ -550,7 +563,16 @@ Features:
       ],
     };
 
-    this.makeChildWidgets([tableNode]);
+    var wrapperNode = {
+      type: "element",
+      tag: "div",
+      attributes: {
+        class: { type: "string", value: "journal-table-scroll" },
+      },
+      children: [tableNode],
+    };
+
+    this.makeChildWidgets([wrapperNode]);
   };
 
   HabitSummaryTableWidget.prototype.refresh = function (changedTiddlers) {

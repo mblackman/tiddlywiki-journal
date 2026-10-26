@@ -19,18 +19,20 @@ Provides:
 
   var WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  function buildDailyCardNode(wiki, dayObj, todayStr, compact) {
+  function buildDailyCardNode(wiki, dayObj, todayStr, compact, activeDateStr) {
     var dateStr = dayObj.format("YYYY-MM-DD");
     var dayName = dayObj.format("ddd");
     var dayNum = dayObj.format("DD");
     var exists = wiki.tiddlerExists(dateStr);
     var isToday = dateStr === todayStr;
     var isFuture = dateStr > todayStr;
+    var isActive = Boolean(activeDateStr && dateStr === activeDateStr);
 
     var classes = ["journal-day-card"];
     if (!exists) classes.push("journal-day-card-ghost");
     if (isFuture) classes.push("journal-day-card-future");
     if (isToday) classes.push("journal-day-card-today");
+    if (isActive) classes.push("journal-day-card-active");
     var classStr = classes.join(" ");
 
     var cardInner = [];
@@ -222,6 +224,7 @@ Provides:
     var nodes = [];
 
     if (mode === "weekly") {
+      var activeDateAttr = this.getAttribute("active", "").trim();
       var weekMatch = /^(\d{4})-W(\d{2})$/.exec(this.period);
       if (weekMatch) {
         var isoYear = parseInt(weekMatch[1], 10);
@@ -234,7 +237,15 @@ Provides:
           var dayObj = monday.add(i, "day");
           var dateStr = dayObj.format("YYYY-MM-DD");
           this.watchedTitles.push(dateStr);
-          dayCards.push(buildDailyCardNode(this.wiki, dayObj, todayStr, false));
+          dayCards.push(
+            buildDailyCardNode(
+              this.wiki,
+              dayObj,
+              todayStr,
+              false,
+              activeDateAttr
+            )
+          );
         }
         nodes.push({
           type: "element",
@@ -479,7 +490,11 @@ Provides:
 
   JournalPeriodGridWidget.prototype.refresh = function (changedTiddlers) {
     var changedAttributes = this.computeAttributes();
-    if (changedAttributes.mode || changedAttributes.period) {
+    if (
+      changedAttributes.mode ||
+      changedAttributes.period ||
+      changedAttributes.active
+    ) {
       this.refreshSelf();
       return true;
     }

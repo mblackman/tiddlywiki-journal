@@ -31,7 +31,7 @@ describe("Journal Plugin ($:/plugins/mblackman/journal)", () => {
     expect(pluginTiddler).toBeDefined();
     expect(pluginTiddler.fields.name).toBe("Journal");
     expect(pluginTiddler.fields["core-version"]).toBe(">=5.4.0");
-    expect(pluginTiddler.fields.version).toBe("0.3.0");
+    expect(pluginTiddler.fields.version).toBe("0.4.0");
     expect(pluginTiddler.fields["plugin-type"]).toBe("plugin");
     expect(pluginTiddler.fields.dependents || []).toEqual([]);
     expect(pluginTiddler.fields.list).toEqual(["readme", "config", "tree"]);
@@ -418,8 +418,13 @@ describe("Journal Plugin ($:/plugins/mblackman/journal)", () => {
       expect(dailyHtml).toContain("Mentioned");
       expect(dailyHtml).toContain("Created");
 
-      // 4. Verify no broken inline <<colour ...>> attributes remain
+      // 4. Verify no broken inline <<colour ...>> attributes remain, and confirm rendered log sections, active week strip, and Daily Notes section
       expect(dailyHtml).not.toContain("<<colour");
+      expect(dailyHtml).toContain("Friday, October 23, 2026");
+      expect(dailyHtml).toContain("journal-day-card-active");
+      expect(dailyHtml).toContain("journal-log-rendered");
+      expect(dailyHtml).toContain("<li>Added monthly habit summary table</li>");
+      expect(dailyHtml).toContain("Daily Notes");
     } finally {
       $tw.wiki.deleteTiddler("2026-10-16");
       $tw.wiki.deleteTiddler("2026-09-23");
@@ -506,6 +511,8 @@ describe("Journal Plugin ($:/plugins/mblackman/journal)", () => {
       expect(dashboardHtml).toContain("Random Past Entry");
       expect(dashboardHtml).toContain("Recent Entries");
       expect(dashboardHtml).toContain("2026-10-23");
+      expect(dashboardHtml).toContain("Quick Thought Capture");
+      expect(dashboardHtml).toContain("Standardized TiddlyWiki Journal with full test suite");
 
       const sidebarHtml = $tw.wiki.renderTiddler(
         "text/html",

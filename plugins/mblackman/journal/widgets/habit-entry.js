@@ -230,7 +230,18 @@ and live `🔥 Xd` current streak badges.
             checked: { type: "string", value: "yes" },
             unchecked: { type: "string", value: "no" },
             default: { type: "string", value: "no" },
+            class: { type: "string", value: "habit-checkbox-control" },
           },
+          children: [
+            {
+              type: "element",
+              tag: "span",
+              attributes: {
+                class: { type: "string", value: "habit-checkbox-text" },
+              },
+              children: [{ type: "text", text: "Completed today" }],
+            },
+          ],
         };
       } else {
         var placeholderVal = "";
@@ -261,6 +272,9 @@ and live `🔥 Xd` current streak badges.
       nodes.push({
         type: "element",
         tag: "div",
+        attributes: {
+          class: { type: "string", value: "habit-card-item" },
+        },
         children: [labelRowNode, inputWidgetNode],
       });
     }

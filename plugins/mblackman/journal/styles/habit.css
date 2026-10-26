@@ -1,22 +1,38 @@
+/* ==========================================================================
+   TiddlyWiki Journal Plugin — Habit Stylesheet ($:/plugins/mblackman/journal/ui/habit)
+   ========================================================================== */
+
+.habit-card-item {
+  background-color: var(--tpc-code-background);
+  border: 1px solid var(--tpc-table-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .habit-label-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  margin-bottom: 4px;
 }
 
 .habit-label {
   display: inline-flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: 4px;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.94em;
   color: var(--tpc-foreground);
 }
 
 .habit-meta-hint {
   font-size: 0.8em;
-  font-weight: normal;
+  font-weight: 400;
   color: var(--tpc-muted-foreground);
 }
 
@@ -26,13 +42,14 @@
   gap: 2px;
   font-size: 0.72em;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 999px;
   background-color: var(--tpc-selection-background);
   color: var(--tpc-selection-foreground);
   border: 1px solid var(--tpc-primary);
-  line-height: 1.1;
+  line-height: 1.2;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tc-tiddler-frame input.habit-input,
@@ -43,19 +60,52 @@ input.habit-input,
   border: 1px solid var(--tpc-table-border);
   width: 100%;
   padding: 8px 10px;
-  border-radius: 6px;
-  line-height: 1.4em;
+  min-height: 38px;
+  border-radius: 8px;
+  line-height: 1.4;
+  font-size: 0.96em;
   box-sizing: border-box;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .tc-tiddler-frame input.habit-input:focus,
 input.habit-input:focus,
 .habit-input:focus {
   border-color: var(--tpc-primary);
+  box-shadow: 0 0 0 2px var(--tpc-selection-background);
   outline: none;
 }
 
+/* --- Tactile Checkbox Habit Control --- */
+label.tc-checkbox.habit-checkbox-control,
+.habit-checkbox-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 38px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  background-color: var(--tpc-tiddler-background);
+  border: 1px solid var(--tpc-table-border);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+label.tc-checkbox.habit-checkbox-control:hover,
+.habit-checkbox-control:hover {
+  border-color: var(--tpc-primary);
+}
+
+.habit-checkbox-text {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: var(--tpc-foreground);
+}
+
+/* --- Shorthand Habit Progress Dots --- */
 .habit-dot {
   font-size: 0.65em;
   font-weight: 700;
@@ -64,22 +114,21 @@ input.habit-input:focus,
   border: 1px solid var(--tpc-primary);
   padding: 1px 4px;
   border-radius: 4px;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .habit-dot.habit-dot-partial {
   background-color: transparent;
   color: var(--tpc-foreground);
   border: 1px dashed var(--tpc-primary);
-  opacity: 0.85;
+  opacity: 0.88;
 }
 
 /* --- Habit Summary Table --- */
 .journal-summary-table {
   width: 100%;
+  min-width: 340px;
   border-collapse: collapse;
-  margin-top: 12px;
-  margin-bottom: 16px;
   background-color: var(--tpc-tiddler-background);
   border: 1px solid var(--tpc-table-border);
   border-radius: 8px;
@@ -93,14 +142,16 @@ input.habit-input:focus,
 
 .journal-summary-th-left {
   text-align: left;
-  padding: 8px 10px;
+  padding: 10px 12px;
   color: var(--tpc-foreground);
+  font-size: 0.9em;
 }
 
 .journal-summary-th-center {
   text-align: center;
-  padding: 8px 10px;
+  padding: 10px 12px;
   color: var(--tpc-foreground);
+  font-size: 0.9em;
 }
 
 .habit-th-header {
@@ -113,7 +164,9 @@ input.habit-input:focus,
 .habit-th-title-row {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 6px;
 }
 
 .journal-summary-tr {
@@ -121,23 +174,46 @@ input.habit-input:focus,
 }
 
 .journal-summary-td-label {
-  padding: 6px 10px;
-  font-weight: 500;
+  padding: 8px 12px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .journal-summary-td-value {
   text-align: center;
-  padding: 6px 10px;
+  padding: 8px 12px;
+}
+
+/* Hide redundant emoji status icon visually while keeping it in DOM for screen readers/tests */
+.habit-summary-status-icon {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+label.tc-checkbox.habit-summary-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  cursor: pointer;
 }
 
 .journal-summary-totals-tr {
-  font-weight: bold;
+  font-weight: 700;
   background-color: var(--tpc-table-header-background);
   border-top: 2px solid var(--tpc-table-border);
 }
 
 .journal-summary-goals-tr {
-  font-size: 0.88em;
+  font-size: 0.86em;
   font-weight: 600;
   color: var(--tpc-muted-foreground);
   background-color: var(--tpc-code-background);
@@ -145,10 +221,21 @@ input.habit-input:focus,
 }
 
 .journal-summary-totals-td-label {
-  padding: 8px 10px;
+  padding: 8px 12px;
+  font-size: 0.82em;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .journal-summary-totals-td-value {
   text-align: center;
-  padding: 8px 10px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .journal-days-grid .habit-dot {
+    font-size: 0.56em;
+    padding: 1px 2px;
+  }
 }

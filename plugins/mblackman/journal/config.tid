@@ -11,6 +11,7 @@ Manage your journal and habit tracking within TiddlyWiki.
 
 Configure the daily habits you want to track. Set an optional daily ''Target'' for numeric habits to enable two-state progress dots and goal completion percentages.
 
+<div class="journal-table-scroll">
 <table class="journal-config-table">
   <thead>
     <tr>
@@ -126,6 +127,7 @@ Configure the daily habits you want to track. Set an optional daily ''Target'' f
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 

@@ -2,10 +2,16 @@ title: $:/plugins/mblackman/journal/dashboard
 caption: Journal Dashboard
 type: text/vnd.tiddlywiki
 
+\whitespace trim
+\import [[$:/plugins/mblackman/journal/macros]]
+
 <$let
   titleDay={{{ [[now]dayjs[YYYY-MM-DD]] }}}
+  prettyDay={{{ [[now]dayjs[ddd, MMM D]] }}}
   weekTag={{{ [[now]dayjs[iso-week]] }}}
+  prettyWeek={{{ [[now]dayjs[{Week }WW]] }}}
   monthTag={{{ [[now]dayjs[YYYY-MM]] }}}
+  prettyMonth={{{ [[now]dayjs[MMMM]] }}}
   yearTag={{{ [[now]dayjs[YYYY]] }}}
   titleWeek=<<weekTag>>
   titleMonth=<<monthTag>>
@@ -19,13 +25,24 @@ type: text/vnd.tiddlywiki
   yearlyTags="Journal Yearly"
 >
 
+<div class="journal-dashboard-header">
+  <div class="journal-dashboard-brand">
+    {{$:/plugins/mblackman/journal/images/journal-icon}}
+    <div>
+      <div class="journal-dashboard-heading">Journal</div>
+      <div class="journal-dashboard-subheading"><$text text={{{ [[now]dayjs[dddd, MMMM D, YYYY]] }}}/></div>
+    </div>
+  </div>
+</div>
+
 <div class="journal-dashboard">
   <$button class="journal-dashboard-tile" tooltip={{{ [[Open today's journal (]addsuffix<titleDay>addsuffix[)]] }}}>
     <$list filter="[<titleDay>!is[tiddler]]" variable="none">
       <$action-setfield $tiddler=<<titleDay>> tags=<<dailyTags>> journal-date=<<dayJournalDate>> year=<<yearTag>> month=<<monthTag>> week=<<weekTag>>/>
     </$list>
     <$action-navigate $to=<<titleDay>>/>
-    <span class="journal-dashboard-icon">📝</span><span>Today</span>
+    <span class="journal-dashboard-tile-title">Today</span>
+    <span class="journal-dashboard-tile-sub"><$text text=<<prettyDay>>/></span>
   </$button>
 
   <$button class="journal-dashboard-tile" tooltip={{{ [[Open this week's review (]addsuffix<titleWeek>addsuffix[)]] }}}>
@@ -33,7 +50,8 @@ type: text/vnd.tiddlywiki
       <$action-setfield $tiddler=<<titleWeek>> tags=<<weeklyTags>> journal-date=<<dayJournalDate>> year=<<yearTag>> month=<<monthTag>>/>
     </$list>
     <$action-navigate $to=<<titleWeek>>/>
-    <span class="journal-dashboard-icon">📅</span><span>Week</span>
+    <span class="journal-dashboard-tile-title">Week</span>
+    <span class="journal-dashboard-tile-sub"><$text text=<<prettyWeek>>/></span>
   </$button>
 
   <$button class="journal-dashboard-tile" tooltip={{{ [[Open this month's review (]addsuffix<titleMonth>addsuffix[)]] }}}>
@@ -41,7 +59,8 @@ type: text/vnd.tiddlywiki
       <$action-setfield $tiddler=<<titleMonth>> tags=<<monthlyTags>> journal-date=<<monthJournalDate>> year=<<yearTag>>/>
     </$list>
     <$action-navigate $to=<<titleMonth>>/>
-    <span class="journal-dashboard-icon">🗓️</span><span>Month</span>
+    <span class="journal-dashboard-tile-title">Month</span>
+    <span class="journal-dashboard-tile-sub"><$text text=<<prettyMonth>>/></span>
   </$button>
 
   <$button class="journal-dashboard-tile" tooltip={{{ [[Open this year's review (]addsuffix<titleYear>addsuffix[)]] }}}>
@@ -49,8 +68,14 @@ type: text/vnd.tiddlywiki
       <$action-setfield $tiddler=<<titleYear>> tags=<<yearlyTags>> journal-date=<<yearJournalDate>> />
     </$list>
     <$action-navigate $to=<<titleYear>>/>
-    <span class="journal-dashboard-icon">🗂️</span><span>Year</span>
+    <span class="journal-dashboard-tile-title">Year</span>
+    <span class="journal-dashboard-tile-sub"><$text text=<<titleYear>>/></span>
   </$button>
+</div>
+
+<div class="journal-quick-capture-box">
+  <div class="journal-history-header"><$text text={{{ [[Quick Thought Capture (]] [<titleDay>] [[)]] +[join[]] }}}/></div>
+  <$transclude $variable="journal-quick-thought" targetDate=<<titleDay>> placeholder="Jot a timestamped thought to today's journal..." />
 </div>
 
 <div class="journal-history-section">
@@ -68,7 +93,7 @@ type: text/vnd.tiddlywiki
             <$action-navigate $to=<<randomEntry>> />
           </$list>
         </$let>
-        🎲 Random Past Entry
+        Random Past Entry
       </$button>
     </$list>
   </div>
@@ -76,11 +101,21 @@ type: text/vnd.tiddlywiki
   <div class="journal-recent-list">
     <$list filter="[tag[Journal]tag[Daily]!sort[title]limit[5]]" emptyMessage="<div class='journal-empty-hint'>No daily entries yet. Click Today above to start!</div>">
       <$link class="journal-recent-item">
-        <span><$view field="title"/></span>
-        <div class="journal-day-card-habits">
-          <$habit-dots />
+        <div class="journal-recent-item-main">
+          <div class="journal-recent-item-top">
+            <span class="journal-recent-date"><$text text={{{ [{!!title}dayjs[ddd, MMM D]] }}}/></span>
+            <span class="journal-recent-iso"><$view field="title"/></span>
+          </div>
+          <$list filter="[all[current]has[highlight]]">
+            <div class="journal-recent-highlight"><$view field="highlight"/></div>
+          </$list>
         </div>
-        <span class="journal-recent-arrow">❯</span>
+        <div class="journal-recent-item-right">
+          <div class="journal-day-card-habits">
+            <$habit-dots />
+          </div>
+          <span class="journal-recent-arrow">›</span>
+        </div>
       </$link>
     </$list>
   </div>
