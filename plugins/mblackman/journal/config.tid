@@ -28,10 +28,10 @@ Configure the daily habits you want to track. Set an optional daily ''Target'' f
   <tbody>
     <$list filter="[tag[$:/tags/Journal/Habit]!has[draft.of]sort[caption]]">
       <tr>
-        <td><$edit-text field="caption" class="tc-edit-texteditor" /></td>
-        <td><$edit-text field="habit-shorthand" class="tc-edit-texteditor" size="3" /></td>
+        <td><$edit-text field="caption" class="tc-edit-texteditor journal-input" /></td>
+        <td><$edit-text field="habit-shorthand" class="tc-edit-texteditor journal-input" size="3" /></td>
         <td>
-          <$edit-text field="journal-field" class="tc-edit-texteditor" />
+          <$edit-text field="journal-field" class="tc-edit-texteditor journal-input" />
           <$let currentField={{!!journal-field}} titleField={{{ [<currentTiddler>removeprefix[$:/config/Journal/Habit/]] }}} configTiddler=<<currentTiddler>>>
             <$list filter="[<currentField>!match<titleField>!is[blank]]">
               <$button class="tc-btn-mini" tooltip="Rename field in all journals and update config title">
@@ -47,20 +47,20 @@ Configure the daily habits you want to track. Set an optional daily ''Target'' f
           </$let>
         </td>
         <td>
-          <$select field="habit-type" class="tc-edit-texteditor">
+          <$select field="habit-type" class="tc-edit-texteditor journal-input">
             <option value="number">Number</option>
             <option value="checkbox">Checkbox</option>
             <option value="text">Text</option>
           </$select>
         </td>
         <td>
-          <$edit-text field="habit-unit" class="tc-edit-texteditor" size="5" placeholder="min, p..." />
+          <$edit-text field="habit-unit" class="tc-edit-texteditor journal-input" size="5" placeholder="min, p..." />
         </td>
         <td>
-          <$edit-text field="habit-target" class="tc-edit-texteditor" size="4" placeholder="e.g. 30" />
+          <$edit-text field="habit-target" class="tc-edit-texteditor journal-input" size="4" placeholder="e.g. 30" />
         </td>
         <td>
-          <$select field="habit-agg" default="sum" class="tc-edit-texteditor">
+          <$select field="habit-agg" default="sum" class="tc-edit-texteditor journal-input">
             <option value="sum">Sum</option>
             <option value="avg">Average</option>
           </$select>
@@ -74,20 +74,20 @@ Configure the daily habits you want to track. Set an optional daily ''Target'' f
       </tr>
     </$list>
     <tr>
-      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="caption" placeholder="e.g. Exercise" class="tc-edit-texteditor" /></td>
-      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-shorthand" placeholder="Ex" class="tc-edit-texteditor" size="3" /></td>
-      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="journal-field" placeholder="e.g. habit-exercise" class="tc-edit-texteditor" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="caption" placeholder="e.g. Exercise" class="tc-edit-texteditor journal-input" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-shorthand" placeholder="Ex" class="tc-edit-texteditor journal-input" size="3" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="journal-field" placeholder="e.g. habit-exercise" class="tc-edit-texteditor journal-input" /></td>
       <td>
-        <$select tiddler="$:/temp/journal/new-habit" field="habit-type" default="number" class="tc-edit-texteditor">
+        <$select tiddler="$:/temp/journal/new-habit" field="habit-type" default="number" class="tc-edit-texteditor journal-input">
           <option value="number">Number</option>
           <option value="checkbox">Checkbox</option>
           <option value="text">Text</option>
         </$select>
       </td>
-      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-unit" placeholder="min" class="tc-edit-texteditor" size="5" /></td>
-      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-target" placeholder="30" class="tc-edit-texteditor" size="4" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-unit" placeholder="min" class="tc-edit-texteditor journal-input" size="5" /></td>
+      <td><$edit-text tiddler="$:/temp/journal/new-habit" field="habit-target" placeholder="30" class="tc-edit-texteditor journal-input" size="4" /></td>
       <td>
-        <$select tiddler="$:/temp/journal/new-habit" field="habit-agg" default="sum" class="tc-edit-texteditor">
+        <$select tiddler="$:/temp/journal/new-habit" field="habit-agg" default="sum" class="tc-edit-texteditor journal-input">
           <option value="sum">Sum</option>
           <option value="avg">Average</option>
         </$select>

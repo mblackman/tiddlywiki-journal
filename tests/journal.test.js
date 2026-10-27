@@ -31,7 +31,7 @@ describe("Journal Plugin ($:/plugins/mblackman/journal)", () => {
     expect(pluginTiddler).toBeDefined();
     expect(pluginTiddler.fields.name).toBe("Journal");
     expect(pluginTiddler.fields["core-version"]).toBe(">=5.4.0");
-    expect(pluginTiddler.fields.version).toBe("0.4.0");
+    expect(pluginTiddler.fields.version).toBe("0.5.0");
     expect(pluginTiddler.fields["plugin-type"]).toBe("plugin");
     expect(pluginTiddler.fields.dependents || []).toEqual([]);
     expect(pluginTiddler.fields.list).toEqual(["readme", "config", "tree"]);

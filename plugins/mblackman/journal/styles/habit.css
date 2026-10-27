@@ -3,9 +3,10 @@
    ========================================================================== */
 
 .habit-card-item {
-  background-color: var(--tpc-code-background);
-  border: 1px solid var(--tpc-table-border);
-  border-radius: 10px;
+  background-color: var(--suite-surface-card, var(--tpc-code-background));
+  border: 1px solid var(--suite-border-subtle, var(--tpc-table-border));
+  border-radius: var(--suite-radius-md, 10px);
+  box-shadow: var(--suite-shadow-xs, none);
   padding: 12px 14px;
   display: flex;
   flex-direction: column;
@@ -27,13 +28,13 @@
   gap: 4px;
   font-weight: 700;
   font-size: 0.94em;
-  color: var(--tpc-foreground);
+  color: var(--suite-fg-primary, var(--tpc-foreground));
 }
 
 .habit-meta-hint {
   font-size: 0.8em;
   font-weight: 400;
-  color: var(--tpc-muted-foreground);
+  color: var(--suite-fg-muted, var(--tpc-muted-foreground));
 }
 
 .habit-streak-pill {
@@ -42,38 +43,60 @@
   gap: 2px;
   font-size: 0.72em;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   padding: 2px 7px;
   border-radius: 999px;
-  background-color: var(--tpc-selection-background);
-  color: var(--tpc-selection-foreground);
-  border: 1px solid var(--tpc-primary);
+  background-color: var(--suite-accent-bg, var(--tpc-selection-background));
+  color: var(--suite-accent, var(--tpc-selection-foreground));
+  border: 1px solid var(--suite-accent-border, var(--tpc-primary));
   line-height: 1.2;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .tc-tiddler-frame input.habit-input,
+.tc-tiddler-frame select.habit-input,
 input.habit-input,
+select.habit-input,
 .habit-input {
-  background-color: var(--tpc-tiddler-background);
-  color: var(--tpc-foreground);
-  border: 1px solid var(--tpc-table-border);
+  background-color: var(--suite-surface-input, var(--tpc-tiddler-background));
+  color: var(--suite-fg-primary, var(--tpc-foreground));
+  border: 1px solid var(--suite-border-subtle, var(--tpc-table-border));
   width: 100%;
-  padding: 8px 10px;
-  min-height: 38px;
-  border-radius: 8px;
+  padding: 7px 10px;
+  min-height: var(--suite-control-height-md, 36px);
+  border-radius: var(--suite-radius-sm, 8px);
   line-height: 1.4;
-  font-size: 0.96em;
+  font-family: inherit;
+  font-size: 0.95em;
+  box-shadow: none;
   box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .tc-tiddler-frame input.habit-input:focus,
+.tc-tiddler-frame select.habit-input:focus,
 input.habit-input:focus,
+select.habit-input:focus,
 .habit-input:focus {
-  border-color: var(--tpc-primary);
-  box-shadow: 0 0 0 2px var(--tpc-selection-background);
+  border-color: var(--suite-accent, var(--tpc-primary));
+  box-shadow: var(--suite-focus-ring, 0 0 0 2px var(--tpc-selection-background));
   outline: none;
+}
+
+.tc-tiddler-frame select.habit-input,
+select.habit-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--suite-fg-muted, #888888) 50%),
+                    linear-gradient(135deg, var(--suite-fg-muted, #888888) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) calc(50% - 2px),
+    calc(100% - 11px) calc(50% - 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 28px;
+  cursor: pointer;
 }
 
 /* --- Tactile Checkbox Habit Control --- */
@@ -129,15 +152,15 @@ label.tc-checkbox.habit-checkbox-control:hover,
   width: 100%;
   min-width: 340px;
   border-collapse: collapse;
-  background-color: var(--tpc-tiddler-background);
-  border: 1px solid var(--tpc-table-border);
-  border-radius: 8px;
+  background-color: var(--suite-surface-card, var(--tpc-tiddler-background));
+  border: 1px solid var(--suite-border-subtle, var(--tpc-table-border));
+  border-radius: var(--suite-radius-md, 10px);
   overflow: hidden;
 }
 
 .journal-summary-thead-tr {
-  background-color: var(--tpc-table-header-background);
-  border-bottom: 2px solid var(--tpc-table-border);
+  background-color: var(--suite-surface-subtle, var(--tpc-table-header-background));
+  border-bottom: 1px solid var(--suite-border-subtle, var(--tpc-table-border));
 }
 
 .journal-summary-th-left {
@@ -170,7 +193,7 @@ label.tc-checkbox.habit-checkbox-control:hover,
 }
 
 .journal-summary-tr {
-  border-bottom: 1px solid var(--tpc-table-border);
+  border-bottom: 1px solid var(--suite-border-subtle, var(--tpc-table-border));
 }
 
 .journal-summary-td-label {
@@ -208,16 +231,16 @@ label.tc-checkbox.habit-summary-checkbox {
 
 .journal-summary-totals-tr {
   font-weight: 700;
-  background-color: var(--tpc-table-header-background);
-  border-top: 2px solid var(--tpc-table-border);
+  background-color: var(--suite-surface-subtle, var(--tpc-table-header-background));
+  border-top: 1px solid var(--suite-border-strong, var(--tpc-table-border));
 }
 
 .journal-summary-goals-tr {
   font-size: 0.86em;
   font-weight: 600;
-  color: var(--tpc-muted-foreground);
-  background-color: var(--tpc-code-background);
-  border-top: 1px dashed var(--tpc-table-border);
+  color: var(--suite-fg-muted, var(--tpc-muted-foreground));
+  background-color: var(--suite-surface-subtle, var(--tpc-code-background));
+  border-top: 1px dashed var(--suite-border-subtle, var(--tpc-table-border));
 }
 
 .journal-summary-totals-td-label {

@@ -57,7 +57,10 @@ type: text/vnd.tiddlywiki
 <div class="journal-habits-container">
   <$journal-habits />
   <$list filter="[[$:/config/Journal/EnableMedia]get[text]else[yes]!match[no]] :filter[[$:/plugins/mblackman/media-importer]!is[missing]]" variable="ignore">
-    <div class="journal-span-2">
+    <div class="journal-span-2 habit-card-item">
+      <div class="habit-label-row">
+        <span class="habit-label">Media Logged Today</span>
+      </div>
       <$MediaPicker date=<<currentTiddler>> />
     </div>
   </$list>
