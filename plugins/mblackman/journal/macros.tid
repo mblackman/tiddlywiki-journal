@@ -86,6 +86,15 @@ type: text/vnd.tiddlywiki
 </$list>
 \end
 
+\procedure journal-quick-add-actions()
+<$let entry={{{ [<tempTiddler>get[text]trim[]] }}}>
+  <$list filter="[<entry>!is[blank]]" variable="ignore">
+    <$action-setfield $field=<<field>> $value={{{ [<currentTiddler>get<field>!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
+    <$action-setfield $tiddler=<<tempTiddler>> text="" />
+  </$list>
+</$let>
+\end
+
 \procedure journal-quick-add(field, placeholder)
 <$let
   tempTiddler={{{ [[$:/temp/journal/quickadd/]] [<currentTiddler>] [[/]] [<field>] +[join[]] }}}
@@ -93,24 +102,12 @@ type: text/vnd.tiddlywiki
 >
   <div class="journal-flex-row journal-quick-add-row">
     <div class="journal-flex-grow">
-      <$keyboard key="enter" class="journal-full-width">
-        <$let entry={{{ [<tempTiddler>get[text]trim[]] }}}>
-          <$list filter="[<entry>!is[blank]]" variable="ignore">
-            <$action-setfield $field=<<field>> $value={{{ [<currentTiddler>get<field>!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
-            <$action-setfield $tiddler=<<tempTiddler>> text="" />
-          </$list>
-        </$let>
+      <$keyboard key="enter" class="journal-full-width" actions=<<journal-quick-add-actions>>>
         <$edit-text tiddler=<<tempTiddler>> tag="input" class="journal-input journal-quick-input" placeholder=<<placeholder>> default="" />
       </$keyboard>
     </div>
-    <$button class="tc-btn-invisible journal-btn journal-btn-primary" tooltip="Add Bullet">
+    <$button class="tc-btn-invisible journal-btn journal-btn-primary" tooltip="Add Bullet" actions=<<journal-quick-add-actions>>>
       Add
-      <$let entry={{{ [<tempTiddler>get[text]trim[]] }}}>
-        <$list filter="[<entry>!is[blank]]" variable="ignore">
-          <$action-setfield $field=<<field>> $value={{{ [<currentTiddler>get<field>!is[blank]addsuffix<newline>] [<entry>addprefix[* ]] +[join[]] }}} />
-          <$action-setfield $tiddler=<<tempTiddler>> text="" />
-        </$list>
-      </$let>
     </$button>
   </div>
 </$let>
@@ -120,7 +117,6 @@ type: text/vnd.tiddlywiki
 <$let
   editState={{{ [[$:/state/journal/edit/]] [<currentTiddler>] [[/]] [<field>] +[join[]] }}}
   isEditing={{{ [<editState>get[text]match[yes]then[yes]else[no]] }}}
-  fieldVal={{{ [<currentTiddler>get<field>trim[]] }}}
 >
   <div class="journal-log-block">
     <div class="journal-log-header-row">
@@ -132,7 +128,7 @@ type: text/vnd.tiddlywiki
           <span class="journal-sublabel"><$text text=<<sublabel>>/></span>
         <% endif %>
       </div>
-      <% if [<fieldVal>!is[blank]] [<isEditing>match[yes]] +[limit[1]] %>
+      <% if [<currentTiddler>get<field>trim[]!is[blank]] [<isEditing>match[yes]] +[limit[1]] %>
         <$button class="tc-btn-invisible journal-btn-ghost-sm" tooltip={{{ [<isEditing>match[yes]then[Finish editing raw list]else[Edit list items]] }}}>
           <% if [<isEditing>match[yes]] %>
             <$action-deletetiddler $tiddler=<<editState>>/>
@@ -145,7 +141,7 @@ type: text/vnd.tiddlywiki
       <% endif %>
     </div>
 
-    <% if [<fieldVal>!is[blank]] %>
+    <% if [<currentTiddler>get<field>trim[]!is[blank]] %>
       <% if [<isEditing>!match[yes]] %>
         <div class="journal-log-rendered">
           <$transclude $tiddler=<<currentTiddler>> $field=<<field>> $mode="block"/>
@@ -164,6 +160,28 @@ type: text/vnd.tiddlywiki
 </$let>
 \end
 
+\procedure journal-quick-thought-actions()
+<$let
+  thoughtText={{{ [<tempThought>get[text]trim[]] }}}
+  timeStamp={{{ [[now]dayjs[HH:mm]] }}}
+  formattedLine={{{ [[* '']] [<timeStamp>] [['' — ]] [<thoughtText>] +[join[]] }}}
+  existingText={{{ [<thoughtDate>get[text]trim[]] }}}
+  weekTag={{{ [<thoughtDate>dayjs[iso-week]] }}}
+  monthTag={{{ [<thoughtDate>dayjs[YYYY-MM]] }}}
+  yearTag={{{ [<thoughtDate>dayjs[YYYY]] }}}
+  dayJournalDate={{{ [<thoughtDate>dayjs[YYYYMMDD120000000]] }}}
+  dailyTags={{{ [[Journal]] [[Daily]] [<weekTag>] [<monthTag>] [<yearTag>] +[join[ ]] }}}
+>
+  <$list filter="[<thoughtText>!is[blank]]" variable="ignore">
+    <$list filter="[<thoughtDate>!is[tiddler]]" variable="none">
+      <$action-setfield $tiddler=<<thoughtDate>> tags=<<dailyTags>> journal-date=<<dayJournalDate>> year=<<yearTag>> month=<<monthTag>> week=<<weekTag>>/>
+    </$list>
+    <$action-setfield $tiddler=<<thoughtDate>> $field="text" $value={{{ [<existingText>!is[blank]addsuffix<newline>] [<formattedLine>] +[join[]] }}} />
+    <$action-setfield $tiddler=<<tempThought>> text="" />
+  </$list>
+</$let>
+\end
+
 \procedure journal-quick-thought(targetDate, placeholder:"Jot a quick timestamped thought to today's notes...")
 <$let
   thoughtDate={{{ [<targetDate>!is[blank]else<currentTiddler>] }}}
@@ -174,50 +192,12 @@ type: text/vnd.tiddlywiki
   <div class="journal-quick-thought-bar">
     <div class="journal-flex-row">
       <div class="journal-flex-grow">
-        <$keyboard key="enter" class="journal-full-width">
-          <$let
-            thoughtText={{{ [<tempThought>get[text]trim[]] }}}
-            timeStamp={{{ [[now]dayjs[HH:mm]] }}}
-            formattedLine={{{ [[* '']] [<timeStamp>] [['' — ]] [<thoughtText>] +[join[]] }}}
-            existingText={{{ [<thoughtDate>get[text]trim[]] }}}
-            weekTag={{{ [<thoughtDate>dayjs[iso-week]] }}}
-            monthTag={{{ [<thoughtDate>dayjs[YYYY-MM]] }}}
-            yearTag={{{ [<thoughtDate>dayjs[YYYY]] }}}
-            dayJournalDate={{{ [<thoughtDate>dayjs[YYYYMMDD120000000]] }}}
-            dailyTags={{{ [[Journal]] [[Daily]] [<weekTag>] [<monthTag>] [<yearTag>] +[join[ ]] }}}
-          >
-            <$list filter="[<thoughtText>!is[blank]]" variable="ignore">
-              <$list filter="[<thoughtDate>!is[tiddler]]" variable="none">
-                <$action-setfield $tiddler=<<thoughtDate>> tags=<<dailyTags>> journal-date=<<dayJournalDate>> year=<<yearTag>> month=<<monthTag>> week=<<weekTag>>/>
-              </$list>
-              <$action-setfield $tiddler=<<thoughtDate>> $field="text" $value={{{ [<existingText>!is[blank]addsuffix<newline>] [<formattedLine>] +[join[]] }}} />
-              <$action-setfield $tiddler=<<tempThought>> text="" />
-            </$list>
-          </$let>
+        <$keyboard key="enter" class="journal-full-width" actions=<<journal-quick-thought-actions>>>
           <$edit-text tiddler=<<tempThought>> tag="input" class="journal-input journal-quick-input" placeholder=<<placeholder>> default="" />
         </$keyboard>
       </div>
-      <$button class="tc-btn-invisible journal-btn journal-btn-primary" tooltip="Append timestamped note">
+      <$button class="tc-btn-invisible journal-btn journal-btn-primary" tooltip="Append timestamped note" actions=<<journal-quick-thought-actions>>>
         Jot
-        <$let
-          thoughtText={{{ [<tempThought>get[text]trim[]] }}}
-          timeStamp={{{ [[now]dayjs[HH:mm]] }}}
-          formattedLine={{{ [[* '']] [<timeStamp>] [['' — ]] [<thoughtText>] +[join[]] }}}
-          existingText={{{ [<thoughtDate>get[text]trim[]] }}}
-          weekTag={{{ [<thoughtDate>dayjs[iso-week]] }}}
-          monthTag={{{ [<thoughtDate>dayjs[YYYY-MM]] }}}
-          yearTag={{{ [<thoughtDate>dayjs[YYYY]] }}}
-          dayJournalDate={{{ [<thoughtDate>dayjs[YYYYMMDD120000000]] }}}
-          dailyTags={{{ [[Journal]] [[Daily]] [<weekTag>] [<monthTag>] [<yearTag>] +[join[ ]] }}}
-        >
-          <$list filter="[<thoughtText>!is[blank]]" variable="ignore">
-            <$list filter="[<thoughtDate>!is[tiddler]]" variable="none">
-              <$action-setfield $tiddler=<<thoughtDate>> tags=<<dailyTags>> journal-date=<<dayJournalDate>> year=<<yearTag>> month=<<monthTag>> week=<<weekTag>>/>
-            </$list>
-            <$action-setfield $tiddler=<<thoughtDate>> $field="text" $value={{{ [<existingText>!is[blank]addsuffix<newline>] [<formattedLine>] +[join[]] }}} />
-            <$action-setfield $tiddler=<<tempThought>> text="" />
-          </$list>
-        </$let>
       </$button>
     </div>
   </div>

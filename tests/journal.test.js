@@ -31,7 +31,7 @@ describe("Journal Plugin ($:/plugins/mblackman/journal)", () => {
     expect(pluginTiddler).toBeDefined();
     expect(pluginTiddler.fields.name).toBe("Journal");
     expect(pluginTiddler.fields["core-version"]).toBe(">=5.4.0");
-    expect(pluginTiddler.fields.version).toBe("0.5.0");
+    expect(pluginTiddler.fields.version).toBe("0.5.1");
     expect(pluginTiddler.fields["plugin-type"]).toBe("plugin");
     expect(pluginTiddler.fields.dependents || []).toEqual([]);
     expect(pluginTiddler.fields.list).toEqual(["readme", "config", "tree"]);
@@ -567,6 +567,107 @@ describe("Journal Plugin ($:/plugins/mblackman/journal)", () => {
     } finally {
       $tw.wiki.addTiddler(existing);
       $tw.wiki.deleteTiddler("$:/temp/journal/calendar-month");
+    }
+  });
+
+  test("preserves input DOM node identity in journal-log-section and journal-quick-thought across typing and submitting entries so mobile keyboards stay open", () => {
+    const findInputs = (root) => {
+      const results = [];
+      const walk = (node) => {
+        if (!node) return;
+        if (node.tag === "input") results.push(node);
+        if (node.children) node.children.forEach(walk);
+      };
+      walk(root);
+      return results;
+    };
+
+    const findKeyboardWidgets = (widget) => {
+      const results = [];
+      const walk = (w) => {
+        if (!w) return;
+        if (w.parseTreeNode && w.parseTreeNode.type === "keyboard") {
+          results.push(w);
+        }
+        if (w.children) w.children.forEach(walk);
+      };
+      walk(widget);
+      return results;
+    };
+
+    const existing22 = $tw.wiki.getTiddler("2026-10-22");
+    const tempWin = "$:/temp/journal/quickadd/2026-10-22/wins-log";
+    const tempThought = "$:/temp/journal/thought/2026-10-22";
+
+    try {
+      const parser = $tw.wiki.parseText(
+        "text/vnd.tiddlywiki",
+        "\\import [[$:/plugins/mblackman/journal/macros]]\n<$tiddler tiddler='2026-10-22'><$transclude $variable='journal-log-section' field='wins-log' label='Wins' placeholder='Add win...' /><$transclude $variable='journal-quick-thought' targetDate='2026-10-22' /></$tiddler>"
+      );
+      const widgetNode = $tw.wiki.makeWidget(parser, {
+        document: $tw.fakeDocument,
+      });
+      const container = $tw.fakeDocument.createElement("div");
+      widgetNode.render(container, null);
+
+      const initialInputs = findInputs(container);
+      expect(initialInputs.length).toBe(2);
+      const [winInput, thoughtInput] = initialInputs;
+
+      // 1. Simulate typing into both temp tiddlers
+      $tw.wiki.addTiddler({ title: tempWin, text: "First mobile win" });
+      $tw.wiki.addTiddler({ title: tempThought, text: "Quick mobile note" });
+      widgetNode.refresh({
+        [tempWin]: { modified: true },
+        [tempThought]: { modified: true },
+      });
+
+      const afterTypingInputs = findInputs(container);
+      expect(afterTypingInputs[0]).toBe(winInput);
+      expect(afterTypingInputs[1]).toBe(thoughtInput);
+
+      // 2. Simulate pressing Enter via the keyboard widgets' action strings
+      const [winKbd, thoughtKbd] = findKeyboardWidgets(widgetNode);
+      expect(winKbd).toBeDefined();
+      expect(thoughtKbd).toBeDefined();
+
+      winKbd.invokeActionString(winKbd.actions, winKbd, {});
+      thoughtKbd.invokeActionString(thoughtKbd.actions, thoughtKbd, {});
+      widgetNode.refresh({
+        "2026-10-22": { modified: true },
+        [tempWin]: { modified: true },
+        [tempThought]: { modified: true },
+      });
+
+      // Verify both entries were appended and temp tiddlers cleared
+      const updated22 = $tw.wiki.getTiddler("2026-10-22");
+      expect(updated22.fields["wins-log"]).toContain("* First mobile win");
+      expect(updated22.fields.text).toContain("— Quick mobile note");
+      expect($tw.wiki.getTiddlerText(tempWin)).toBe("");
+      expect($tw.wiki.getTiddlerText(tempThought)).toBe("");
+
+      // Verify the exact same <input> DOM nodes remain mounted (no blur / keyboard dismissal)
+      const afterSubmitInputs = findInputs(container);
+      expect(afterSubmitInputs[0]).toBe(winInput);
+      expect(afterSubmitInputs[1]).toBe(thoughtInput);
+
+      // 3. Submit a second consecutive entry to verify multi-entry flow
+      $tw.wiki.addTiddler({ title: tempWin, text: "Second mobile win" });
+      widgetNode.refresh({ [tempWin]: { modified: true } });
+      winKbd.invokeActionString(winKbd.actions, winKbd, {});
+      widgetNode.refresh({
+        "2026-10-22": { modified: true },
+        [tempWin]: { modified: true },
+      });
+
+      expect($tw.wiki.getTiddler("2026-10-22").fields["wins-log"]).toContain(
+        "* First mobile win\n* Second mobile win"
+      );
+      expect(findInputs(container)[0]).toBe(winInput);
+    } finally {
+      $tw.wiki.addTiddler(existing22);
+      $tw.wiki.deleteTiddler(tempWin);
+      $tw.wiki.deleteTiddler(tempThought);
     }
   });
 });
